@@ -10,11 +10,14 @@
     "@types/node": "^16.11.43",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
+    "minimist": "^1.2.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
+    "ts-node": "^10.8.2",
     "typescript": "^4.7.4",
-    "web-vitals": "^2.1.4"
+    "wweb3.storageeb-vitals": "^2.1.4",
+    "": "^4.3.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -39,5 +42,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "type": "module"
 }
