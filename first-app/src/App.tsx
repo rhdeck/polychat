@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
 import logo from "./logo.svg";
-// import "./App.css";
 import { Link, Routes, Route } from "react-router-dom";
 import {
   MetamaskDisconnected,
@@ -9,13 +8,16 @@ import {
   useAccount,
 } from "@raydeck/usemetamask";
 import {
-  eth_decrypt,
   eth_getEncryptionPublicKey,
   eth_requestAccounts,
 } from "@raydeck/metamask-ts";
-import { encryptSafely } from "@metamask/eth-sig-util";
+import { encrypt, decrypt } from "./crypt";
 import copy from "clipboard-copy";
-// import { Buffer } from "buffer";
+
+import "react-quill/dist/quill.snow.css";
+import ReactQuill from "react-quill";
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
 console.log(Buffer);
 function App() {
   return (
@@ -48,6 +50,7 @@ const Home = () => {
   const [publicKey, setPublicKey] = useState("");
   const [cipherText, setCipherText] = useState("");
   const [encryptedText, setEncryptedText] = useState("");
+  const [decryptedText, setDecryptedText] = useState("");
   useEffect(() => {
     (async () => {
       const publicKey = await eth_getEncryptionPublicKey(account);
@@ -72,18 +75,8 @@ const Home = () => {
         className="bg-blue-500 p-2 rounded-md border-2 border-blue-900"
         onClick={() => {
           console.log(text);
-          const data = Buffer.from(text).toString("base64");
-          const enc = encryptSafely({
-            publicKey,
-            data,
-            version: "x25519-xsalsa20-poly1305",
-          });
-          console.log("mny enc is ", enc);
-          const buf = Buffer.concat([
-            Buffer.from(enc.ephemPublicKey, "base64"),
-            Buffer.from(enc.nonce, "base64"),
-            Buffer.from(enc.ciphertext, "base64"),
-          ]);
+          const data = Buffer.from(text);
+          const buf = encrypt(data, publicKey);
           setCipherText(buf.toString("base64"));
         }}
       >
@@ -98,31 +91,39 @@ const Home = () => {
         onClick={async () => {
           console.log("ciphertext", encryptedText);
           const data = Buffer.from(encryptedText, "base64");
-          const structuredData = {
-            version: "x25519-xsalsa20-poly1305",
-            ephemPublicKey: data.slice(0, 32).toString("base64"),
-            nonce: data.slice(32, 56).toString("base64"),
-            ciphertext: data.slice(56).toString("base64"),
-          };
-          const json = JSON.stringify(structuredData);
-          const jsonBuf = Buffer.from(json, "utf8");
-          const ct = "0x" + jsonBuf.toString("hex");
-          const clearText = await eth_decrypt(ct, account);
-          console.log("clear text is ", clearText);
-          const obj: { data: string; padding?: string } = JSON.parse(clearText);
-          const sourceText = Buffer.from(obj.data, "base64").toString("utf8");
-          console.log("source text was", sourceText);
+          const out = await decrypt(data, account);
+          const sourceText = out.toString("utf8");
+          setDecryptedText(sourceText);
         }}
       >
         Decrypt
       </button>
+      <p>Decrypted text is {decryptedText}</p>
     </div>
   );
 };
 const About = () => {
+  const [text, setText] = useState("");
+  const editor = useEditor({
+    extensions: [StarterKit],
+    content: "<p>Hello World!</p>",
+    editorProps: {
+      attributes: {
+        class:
+          "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl m-5 focus:outline-none",
+      },
+    },
+  });
   return (
     <div>
       this is what i am about <Link to="/">Back to Home</Link>
+      <ReactQuill
+        theme="snow"
+        defaultValue={"Hello there"}
+        onChange={setText}
+      />
+      <div>{text}</div>
+      <EditorContent editor={editor} />
     </div>
   );
 };
