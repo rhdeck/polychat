@@ -4,7 +4,7 @@ pragma solidity ^0.8.9;
 // Import this file to use console.log
 import "hardhat/console.sol";
 
-contract Lock{
+contract IPFSChat{
     mapping (address => string) public publicKeys;
     mapping (address => string[]) private _messages;
     mapping (address => uint) public messageCount;
