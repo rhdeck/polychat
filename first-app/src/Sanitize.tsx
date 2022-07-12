@@ -14,6 +14,8 @@ export const SanitizeHTML: FC<{ html: string; options?: DOMPurify.Config }> = ({
   options = {},
 }) => (
   <div
-    dangerouslySetInnerHTML={{ __html: sanitize(html, options).toString() }}
+    dangerouslySetInnerHTML={{
+      __html: sanitize(html, options).__html as string,
+    }}
   />
 );
