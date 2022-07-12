@@ -18,7 +18,7 @@
     "typechain": "^8.1.0"
   },
   "scripts": {
-    "build:types": "yarn typechain artifacts/contracts/IPFSChat.sol/IPFSChat.json --target ethers-v5 --out-dir ../first-app/src/contracts"
+    "build:types": "yarn typechain artifacts/contracts/PolyChat.sol/PolyChat.json --target ethers-v5 --out-dir ../first-app/src/contracts"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.7.0"

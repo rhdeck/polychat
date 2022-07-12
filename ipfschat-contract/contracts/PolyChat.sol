@@ -5,7 +5,7 @@ pragma solidity ^0.8.9;
 // import "hardhat/console.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract IPFSChat is Ownable {
+contract PolyChat is Ownable {
     mapping(address => string) private publicKeys;
     mapping(address => string[]) private _messages;
     mapping(address => uint256) private _messagingFee;
@@ -68,7 +68,7 @@ contract IPFSChat is Ownable {
         return _globalMessagingFee;
     }
 
-    function sendMessageTo(string memory _message, address _address)
+    function sendMessageTo(string memory _message, address payable _address)
         public
         payable
     {
@@ -98,8 +98,7 @@ contract IPFSChat is Ownable {
                 "Incorrect messaging fee"
             );
         }
-        address payable _payable = payable(_address);
-        require(_payable.send(msg.value - _globalMessagingFee));
+        _address.transfer(msg.value - _globalMessagingFee);
         emit Message(msg.sender, _address, _message);
     }
 
@@ -116,6 +115,6 @@ contract IPFSChat is Ownable {
         public
         onlyOwner
     {
-        _address.send(_amount);
+        _address.transfer(_amount);
     }
 }

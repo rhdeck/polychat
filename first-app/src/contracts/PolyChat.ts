@@ -28,7 +28,7 @@ import type {
   PromiseOrValue,
 } from "./common";
 
-export interface IPFSChatInterface extends utils.Interface {
+export interface PolyChatInterface extends utils.Interface {
   functions: {
     "globalMessagingFee()": FunctionFragment;
     "messagingFeeFor(address)": FunctionFragment;
@@ -41,6 +41,7 @@ export interface IPFSChatInterface extends utils.Interface {
     "setPublicKey(string)": FunctionFragment;
     "setWhiteListFee(address,uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
+    "withdraw(address,uint256)": FunctionFragment;
   };
 
   getFunction(
@@ -56,6 +57,7 @@ export interface IPFSChatInterface extends utils.Interface {
       | "setPublicKey"
       | "setWhiteListFee"
       | "transferOwnership"
+      | "withdraw"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -99,6 +101,10 @@ export interface IPFSChatInterface extends utils.Interface {
     functionFragment: "transferOwnership",
     values: [PromiseOrValue<string>]
   ): string;
+  encodeFunctionData(
+    functionFragment: "withdraw",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
 
   decodeFunctionResult(
     functionFragment: "globalMessagingFee",
@@ -141,6 +147,7 @@ export interface IPFSChatInterface extends utils.Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
 
   events: {
     "Message(address,address,string)": EventFragment;
@@ -229,12 +236,12 @@ export type OwnershipTransferredEvent = TypedEvent<
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
 
-export interface IPFSChat extends BaseContract {
+export interface PolyChat extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: IPFSChatInterface;
+  interface: PolyChatInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -305,6 +312,12 @@ export interface IPFSChat extends BaseContract {
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    withdraw(
+      _address: PromiseOrValue<string>,
+      _amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
   };
 
   globalMessagingFee(overrides?: CallOverrides): Promise<BigNumber>;
@@ -357,6 +370,12 @@ export interface IPFSChat extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  withdraw(
+    _address: PromiseOrValue<string>,
+    _amount: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
     globalMessagingFee(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -403,6 +422,12 @@ export interface IPFSChat extends BaseContract {
 
     transferOwnership(
       newOwner: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    withdraw(
+      _address: PromiseOrValue<string>,
+      _amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -515,6 +540,12 @@ export interface IPFSChat extends BaseContract {
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    withdraw(
+      _address: PromiseOrValue<string>,
+      _amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -567,6 +598,12 @@ export interface IPFSChat extends BaseContract {
 
     transferOwnership(
       newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    withdraw(
+      _address: PromiseOrValue<string>,
+      _amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };
