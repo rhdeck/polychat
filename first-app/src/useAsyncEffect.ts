@@ -15,6 +15,6 @@ const useAsyncEffect = (
       }
     })();
     //@eslint-disable-next-line
-  }, [promise, ...conditions]);
+  }, [...conditions]);
 };
 export default useAsyncEffect;

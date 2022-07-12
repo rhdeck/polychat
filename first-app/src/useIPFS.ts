@@ -4,9 +4,10 @@ let gateway = "https://ipfs.io/ipfs/";
 export const setGateway = (newGateway: string) => {
   gateway = newGateway;
 };
-export const useIPFS = (cid: string) => {
+export const useIPFS = (cid: string | undefined) => {
   const [ipfs, setIPFS] = useState<Buffer>();
   useAsyncEffect(async () => {
+    if (!cid) return;
     const content64 = localStorage.getItem("ipfs_" + cid);
     if (content64) {
       const content = Buffer.from(content64, "base64");
@@ -19,6 +20,7 @@ export const useIPFS = (cid: string) => {
       setIPFS(buf);
     }
   }, [cid]);
+  console.log("ipfs is ", ipfs?.toString("utf8"));
   return ipfs;
 };
 
