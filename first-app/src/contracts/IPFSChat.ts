@@ -4,10 +4,12 @@
 import type {
   BaseContract,
   BigNumber,
+  BigNumberish,
   BytesLike,
   CallOverrides,
   ContractTransaction,
   Overrides,
+  PayableOverrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -28,68 +30,133 @@ import type {
 
 export interface IPFSChatInterface extends utils.Interface {
   functions: {
-    "messageCount(address)": FunctionFragment;
+    "globalMessagingFee()": FunctionFragment;
+    "messagingFeeFor(address)": FunctionFragment;
+    "owner()": FunctionFragment;
     "publicKeyOf(address)": FunctionFragment;
-    "publicKeys(address)": FunctionFragment;
+    "renounceOwnership()": FunctionFragment;
     "sendMessageTo(string,address)": FunctionFragment;
+    "setGlobalMessagingFee(uint256)": FunctionFragment;
+    "setMessagingFee(uint256)": FunctionFragment;
     "setPublicKey(string)": FunctionFragment;
+    "setWhiteListFee(address,uint256)": FunctionFragment;
+    "transferOwnership(address)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "messageCount"
+      | "globalMessagingFee"
+      | "messagingFeeFor"
+      | "owner"
       | "publicKeyOf"
-      | "publicKeys"
+      | "renounceOwnership"
       | "sendMessageTo"
+      | "setGlobalMessagingFee"
+      | "setMessagingFee"
       | "setPublicKey"
+      | "setWhiteListFee"
+      | "transferOwnership"
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "messageCount",
+    functionFragment: "globalMessagingFee",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "messagingFeeFor",
     values: [PromiseOrValue<string>]
   ): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "publicKeyOf",
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "publicKeys",
-    values: [PromiseOrValue<string>]
+    functionFragment: "renounceOwnership",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "sendMessageTo",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
+    functionFragment: "setGlobalMessagingFee",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setMessagingFee",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setPublicKey",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setWhiteListFee",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferOwnership",
     values: [PromiseOrValue<string>]
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "messageCount",
+    functionFragment: "globalMessagingFee",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "messagingFeeFor",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "publicKeyOf",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "publicKeys", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "sendMessageTo",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "setGlobalMessagingFee",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setMessagingFee",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "setPublicKey",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setWhiteListFee",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
 
   events: {
     "Message(address,address,string)": EventFragment;
+    "NewGlobalMessagingFee(uint256)": EventFragment;
+    "NewMessagingFee(address,uint256)": EventFragment;
     "NewPublicKey(address,string)": EventFragment;
+    "NewWhitelistMessagingFee(address,address,uint256)": EventFragment;
+    "OwnershipTransferred(address,address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Message"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "NewGlobalMessagingFee"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "NewMessagingFee"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NewPublicKey"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "NewWhitelistMessagingFee"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
 }
 
 export interface MessageEventObject {
@@ -104,6 +171,28 @@ export type MessageEvent = TypedEvent<
 
 export type MessageEventFilter = TypedEventFilter<MessageEvent>;
 
+export interface NewGlobalMessagingFeeEventObject {
+  _messagingFee: BigNumber;
+}
+export type NewGlobalMessagingFeeEvent = TypedEvent<
+  [BigNumber],
+  NewGlobalMessagingFeeEventObject
+>;
+
+export type NewGlobalMessagingFeeEventFilter =
+  TypedEventFilter<NewGlobalMessagingFeeEvent>;
+
+export interface NewMessagingFeeEventObject {
+  _account: string;
+  _messagingFee: BigNumber;
+}
+export type NewMessagingFeeEvent = TypedEvent<
+  [string, BigNumber],
+  NewMessagingFeeEventObject
+>;
+
+export type NewMessagingFeeEventFilter = TypedEventFilter<NewMessagingFeeEvent>;
+
 export interface NewPublicKeyEventObject {
   _account: string;
   _publicKey: string;
@@ -114,6 +203,31 @@ export type NewPublicKeyEvent = TypedEvent<
 >;
 
 export type NewPublicKeyEventFilter = TypedEventFilter<NewPublicKeyEvent>;
+
+export interface NewWhitelistMessagingFeeEventObject {
+  _account: string;
+  fromAccount: string;
+  _messagingFee: BigNumber;
+}
+export type NewWhitelistMessagingFeeEvent = TypedEvent<
+  [string, string, BigNumber],
+  NewWhitelistMessagingFeeEventObject
+>;
+
+export type NewWhitelistMessagingFeeEventFilter =
+  TypedEventFilter<NewWhitelistMessagingFeeEvent>;
+
+export interface OwnershipTransferredEventObject {
+  previousOwner: string;
+  newOwner: string;
+}
+export type OwnershipTransferredEvent = TypedEvent<
+  [string, string],
+  OwnershipTransferredEventObject
+>;
+
+export type OwnershipTransferredEventFilter =
+  TypedEventFilter<OwnershipTransferredEvent>;
 
 export interface IPFSChat extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -142,24 +256,37 @@ export interface IPFSChat extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    messageCount(
-      arg0: PromiseOrValue<string>,
+    globalMessagingFee(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    messagingFeeFor(
+      _address: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
+
+    owner(overrides?: CallOverrides): Promise<[string]>;
 
     publicKeyOf(
       _address: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
-    publicKeys(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
+    renounceOwnership(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
     sendMessageTo(
       _message: PromiseOrValue<string>,
       _address: PromiseOrValue<string>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    setGlobalMessagingFee(
+      _newMessagingFee: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    setMessagingFee(
+      _newFee: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -167,26 +294,50 @@ export interface IPFSChat extends BaseContract {
       _public_key: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    setWhiteListFee(
+      _from: PromiseOrValue<string>,
+      _newFee: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    transferOwnership(
+      newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
   };
 
-  messageCount(
-    arg0: PromiseOrValue<string>,
+  globalMessagingFee(overrides?: CallOverrides): Promise<BigNumber>;
+
+  messagingFeeFor(
+    _address: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
+
+  owner(overrides?: CallOverrides): Promise<string>;
 
   publicKeyOf(
     _address: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<string>;
 
-  publicKeys(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<string>;
+  renounceOwnership(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   sendMessageTo(
     _message: PromiseOrValue<string>,
     _address: PromiseOrValue<string>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  setGlobalMessagingFee(
+    _newMessagingFee: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  setMessagingFee(
+    _newFee: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -195,21 +346,33 @@ export interface IPFSChat extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  setWhiteListFee(
+    _from: PromiseOrValue<string>,
+    _newFee: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  transferOwnership(
+    newOwner: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
-    messageCount(
-      arg0: PromiseOrValue<string>,
+    globalMessagingFee(overrides?: CallOverrides): Promise<BigNumber>;
+
+    messagingFeeFor(
+      _address: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    owner(overrides?: CallOverrides): Promise<string>;
 
     publicKeyOf(
       _address: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<string>;
 
-    publicKeys(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<string>;
+    renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     sendMessageTo(
       _message: PromiseOrValue<string>,
@@ -217,8 +380,29 @@ export interface IPFSChat extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    setGlobalMessagingFee(
+      _newMessagingFee: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setMessagingFee(
+      _newFee: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     setPublicKey(
       _public_key: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setWhiteListFee(
+      _from: PromiseOrValue<string>,
+      _newFee: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    transferOwnership(
+      newOwner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -235,6 +419,22 @@ export interface IPFSChat extends BaseContract {
       _message?: null
     ): MessageEventFilter;
 
+    "NewGlobalMessagingFee(uint256)"(
+      _messagingFee?: null
+    ): NewGlobalMessagingFeeEventFilter;
+    NewGlobalMessagingFee(
+      _messagingFee?: null
+    ): NewGlobalMessagingFeeEventFilter;
+
+    "NewMessagingFee(address,uint256)"(
+      _account?: PromiseOrValue<string> | null,
+      _messagingFee?: null
+    ): NewMessagingFeeEventFilter;
+    NewMessagingFee(
+      _account?: PromiseOrValue<string> | null,
+      _messagingFee?: null
+    ): NewMessagingFeeEventFilter;
+
     "NewPublicKey(address,string)"(
       _account?: PromiseOrValue<string> | null,
       _publicKey?: null
@@ -243,60 +443,130 @@ export interface IPFSChat extends BaseContract {
       _account?: PromiseOrValue<string> | null,
       _publicKey?: null
     ): NewPublicKeyEventFilter;
+
+    "NewWhitelistMessagingFee(address,address,uint256)"(
+      _account?: PromiseOrValue<string> | null,
+      fromAccount?: null,
+      _messagingFee?: null
+    ): NewWhitelistMessagingFeeEventFilter;
+    NewWhitelistMessagingFee(
+      _account?: PromiseOrValue<string> | null,
+      fromAccount?: null,
+      _messagingFee?: null
+    ): NewWhitelistMessagingFeeEventFilter;
+
+    "OwnershipTransferred(address,address)"(
+      previousOwner?: PromiseOrValue<string> | null,
+      newOwner?: PromiseOrValue<string> | null
+    ): OwnershipTransferredEventFilter;
+    OwnershipTransferred(
+      previousOwner?: PromiseOrValue<string> | null,
+      newOwner?: PromiseOrValue<string> | null
+    ): OwnershipTransferredEventFilter;
   };
 
   estimateGas: {
-    messageCount(
-      arg0: PromiseOrValue<string>,
+    globalMessagingFee(overrides?: CallOverrides): Promise<BigNumber>;
+
+    messagingFeeFor(
+      _address: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     publicKeyOf(
       _address: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    publicKeys(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
+    renounceOwnership(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     sendMessageTo(
       _message: PromiseOrValue<string>,
       _address: PromiseOrValue<string>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    setGlobalMessagingFee(
+      _newMessagingFee: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    setMessagingFee(
+      _newFee: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     setPublicKey(
       _public_key: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    setWhiteListFee(
+      _from: PromiseOrValue<string>,
+      _newFee: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    transferOwnership(
+      newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    messageCount(
-      arg0: PromiseOrValue<string>,
+    globalMessagingFee(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    messagingFeeFor(
+      _address: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     publicKeyOf(
       _address: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    publicKeys(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
+    renounceOwnership(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     sendMessageTo(
       _message: PromiseOrValue<string>,
       _address: PromiseOrValue<string>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setGlobalMessagingFee(
+      _newMessagingFee: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setMessagingFee(
+      _newFee: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     setPublicKey(
       _public_key: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setWhiteListFee(
+      _from: PromiseOrValue<string>,
+      _newFee: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    transferOwnership(
+      newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };

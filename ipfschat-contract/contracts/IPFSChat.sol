@@ -3,17 +3,36 @@ pragma solidity ^0.8.9;
 
 // Import this file to use console.log
 // import "hardhat/console.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract IPFSChat{
-    mapping (address => string) public publicKeys;
-    mapping (address => string[]) private _messages;
-    mapping (address => uint) public messageCount;
+contract IPFSChat is Ownable {
+    mapping(address => string) private publicKeys;
+    mapping(address => string[]) private _messages;
+    mapping(address => uint256) private _messagingFee;
+    mapping(address => mapping(address => uint256))
+        private _messagingFeeWhiteList;
+    uint256 private _globalMessagingFee;
+
+    constructor() {
+        _globalMessagingFee = 10**15; //1 finney
+        emit NewGlobalMessagingFee(_globalMessagingFee);
+    }
 
     event Message(address _sender, address indexed _recepient, string _message);
     event NewPublicKey(address indexed _account, string _publicKey);
-    // constructor() {
-    //     publicKeys[msg.sender] = msg.sender.toString();
-    // }
+    event NewGlobalMessagingFee(uint256 _messagingFee);
+    event NewMessagingFee(address indexed _account, uint256 _messagingFee);
+    event NewWhitelistMessagingFee(
+        address indexed _account,
+        address fromAccount,
+        uint256 _messagingFee
+    );
+
+    function setGlobalMessagingFee(uint256 _newMessagingFee) public onlyOwner {
+        _globalMessagingFee = _newMessagingFee;
+        emit NewGlobalMessagingFee(_newMessagingFee);
+    }
+
     function setPublicKey(string memory _public_key) public {
         publicKeys[msg.sender] = _public_key;
         emit NewPublicKey(msg.sender, _public_key);
@@ -23,11 +42,64 @@ contract IPFSChat{
         return publicKeys[_address];
     }
 
-    function sendMessageTo(string memory _message, address _address) public {
-        // _messages[_address].push(_message);
-        // messageCount[_address]++;
-        require(bytes(publicKeys[_address]).length > 0, "Recipient public key not added");
-        require(bytes(publicKeys[msg.sender]).length > 0, "Sender public key not added");
+    function setMessagingFee(uint256 _newFee) public {
+        _messagingFee[msg.sender] = _newFee;
+        emit NewMessagingFee(msg.sender, _newFee);
+    }
+
+    function setWhiteListFee(address _from, uint256 _newFee) public {
+        _messagingFeeWhiteList[msg.sender][_from] = _newFee;
+        emit NewWhitelistMessagingFee(msg.sender, _from, _newFee);
+    }
+
+    function messagingFeeFor(address _address) public view returns (uint256) {
+        if (_messagingFeeWhiteList[_address][msg.sender] > 0) {
+            return
+                _messagingFeeWhiteList[_address][msg.sender] +
+                _globalMessagingFee;
+        } else if (_messagingFee[_address] > 0) {
+            return _messagingFee[_address] + _globalMessagingFee;
+        } else {
+            return _globalMessagingFee;
+        }
+    }
+
+    function globalMessagingFee() public view returns (uint256) {
+        return _globalMessagingFee;
+    }
+
+    function sendMessageTo(string memory _message, address _address)
+        public
+        payable
+    {
+        require(
+            bytes(publicKeys[_address]).length > 0,
+            "Recipient public key not added"
+        );
+        require(
+            bytes(publicKeys[msg.sender]).length > 0,
+            "Sender public key not added"
+        );
+        if (_messagingFeeWhiteList[_address][msg.sender] > 0) {
+            require(
+                msg.value ==
+                    _messagingFeeWhiteList[_address][msg.sender] +
+                        _globalMessagingFee,
+                "Incorrect messaging fee"
+            );
+        } else if (_messagingFee[_address] > 0) {
+            require(
+                msg.value == _messagingFee[_address] + _globalMessagingFee,
+                "Incorrect messaging fee"
+            );
+        } else {
+            require(
+                msg.value == _globalMessagingFee,
+                "Incorrect messaging fee"
+            );
+        }
+        address payable _payable = payable(_address);
+        require(_payable.send(msg.value - _globalMessagingFee));
         emit Message(msg.sender, _address, _message);
     }
 
@@ -39,5 +111,4 @@ contract IPFSChat{
     // function messages() public view returns (string[] memory) {
     //     return _messages[msg.sender];
     // }
-
 }

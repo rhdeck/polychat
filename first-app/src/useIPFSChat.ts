@@ -1,27 +1,22 @@
 import { IPFSChat__factory } from "./contracts";
-import { ethers } from "ethers";
-import { useAccount } from "@raydeck/usemetamask";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { BigNumber, ethers } from "ethers";
+import { useAccount, useChainId } from "@raydeck/usemetamask";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useAsyncEffect from "./useAsyncEffect";
-let ipfsChatAddress = "0x";
-export const setIPFSChatAddress = (address: string) => {
-  ipfsChatAddress = address;
+
+export const addresses: Record<string, string> = {
+  "31337": "0x1291Be112d480055DaFd8a610b7d1e203891C274",
 };
-const ethereum = (window as unknown as { ethereum: any }).ethereum;
-// export { ethereum } from "@raydeck/metamask-ts";
+export const ethereum = (window as unknown as { ethereum: any }).ethereum;
+export const provider = new ethers.providers.Web3Provider(ethereum);
 export const useIPFSChat = () => {
+  const chainId = useChainId();
+  const ipfsChatAddress = addresses[chainId]
+    ? addresses[chainId]
+    : addresses["31337"];
   const ipfsChat = useMemo(
-    () =>
-      IPFSChat__factory.connect(
-        ipfsChatAddress,
-        new ethers.providers.Web3Provider(ethereum).getSigner()
-        // new ethers.providers.AlchemyProvider(
-        //   undefined,
-        //   "9JQtGHY92X8gSWdkMMmAS_nL0aB31bO-"
-        // )
-        // new ethers.providers.Web3Provider((window as any).ethereum as any, "any")
-      ),
-    []
+    () => IPFSChat__factory.connect(ipfsChatAddress, provider.getSigner()),
+    [ipfsChatAddress]
   );
   return ipfsChat;
 };
@@ -33,13 +28,14 @@ export const useMessages = (address: string) => {
   useAsyncEffect(async () => {
     const filter = ipfsChat.filters.Message(undefined, address, undefined);
     const events = await ipfsChat.queryFilter(filter);
-    console.log("I have events", events);
     setMessages(
-      events.map((event) => ({
-        from: event.args[0],
-        cid: event.args[2],
-        blockNumber: event.blockNumber,
-      }))
+      events
+        .map((event) => ({
+          from: event.args[0],
+          cid: event.args[2],
+          blockNumber: event.blockNumber,
+        }))
+        .sort((a, b) => b.blockNumber - a.blockNumber)
     );
   }, [address]);
   useEffect(() => {
@@ -75,14 +71,7 @@ export const usePublicKey = (address: string) => {
       _publicKey,
       event
     ) => {
-      console.log("My event is", _address, _publicKey, event);
-      console.log(
-        "Comparing ",
-        { _address, address },
-        _address.toLowerCase() == address.toLowerCase()
-      );
-      if (_address.toLowerCase() == address.toLowerCase()) {
-        console.log("Setting public key to ", _publicKey);
+      if (_address.toLowerCase() === address.toLowerCase()) {
         setPublicKey(_publicKey);
       }
     };
@@ -100,17 +89,99 @@ export const useMyPublicKey = () => {
 
 export const useSendMessage = () => {
   const ipfsChat = useIPFSChat();
-  return useCallback(async (to: string, message: string) => {
-    const tx = await ipfsChat.sendMessageTo(message, to);
-    const receipt = await tx.wait();
-    return receipt;
-  }, []);
+  return useCallback(
+    async (to: string, message: string) => {
+      const tx = await ipfsChat.sendMessageTo(message, to);
+      const receipt = await tx.wait();
+      return receipt;
+    },
+    [ipfsChat]
+  );
 };
 export const useSetPublicKey = () => {
   const ipfsChat = useIPFSChat();
-  return useCallback(async (publicKey: string) => {
-    const tx = await ipfsChat.setPublicKey(publicKey);
-    const receipt = await tx.wait();
-    return receipt;
+  return useCallback(
+    async (publicKey: string) => {
+      const tx = await ipfsChat.setPublicKey(publicKey);
+      const receipt = await tx.wait();
+      return receipt;
+    },
+    [ipfsChat]
+  );
+};
+export const useGetFeeForRecipient = () => {
+  const ipfsChat = useIPFSChat();
+  return useCallback(
+    async (recipient: string) => {
+      return ipfsChat.messagingFeeFor(recipient);
+    },
+    [ipfsChat]
+  );
+};
+export const useFee = (address: string) => {
+  const ipfsChat = useIPFSChat();
+  const globalFee = useGlobalFee();
+  const globalFeeRef = useRef(BigNumber.from(0));
+  globalFeeRef.current = globalFee || BigNumber.from(0);
+  const [fee, setFee] = useState<BigNumber>();
+  useAsyncEffect(async () => {
+    const data = await ipfsChat.messagingFeeFor(address);
+    setFee(data);
+  }, [address]);
+  useEffect(() => {
+    const listener: ethers.providers.Listener = (_address, _fee, event) => {
+      if (_address.toLowerCase() === address.toLowerCase()) {
+        setFee((_fee as BigNumber).add(globalFeeRef.current));
+      }
+    };
+    ipfsChat.on("NewMessagingFee", listener);
+    return () => {
+      ipfsChat.removeListener("NewMessagingFee", listener);
+    };
+  }, [address, ipfsChat]);
+  return fee;
+};
+export const useMyFee = () => {
+  const address = useAccount();
+  return useFee(address);
+};
+export const useGlobalFee = () => {
+  const ipfsChat = useIPFSChat();
+  const [fee, setFee] = useState<BigNumber>();
+  useAsyncEffect(async () => {
+    const data = await ipfsChat.globalMessagingFee();
+    setFee(data);
   }, []);
+  useEffect(() => {
+    const listener: ethers.providers.Listener = (_fee, event) => {
+      setFee(_fee);
+    };
+    ipfsChat.on("NewGlobalMessagingFee", listener);
+    return () => {
+      ipfsChat.removeListener("NewGlobalMessagingFee", listener);
+    };
+  }, [ipfsChat]);
+  return fee;
+};
+export const useSetFee = () => {
+  const ipfsChat = useIPFSChat();
+  return useCallback(
+    async (newFee: BigNumber) => {
+      const tx = await ipfsChat.setMessagingFee(newFee);
+      const receipt = await tx.wait();
+      return receipt;
+    },
+    [ipfsChat]
+  );
+};
+export const useSetWhitelistFee = () => {
+  const ipfsChat = useIPFSChat();
+  return useCallback(
+    async (sender: string, newFee: BigNumber) => {
+      const tx = await ipfsChat.setWhiteListFee(sender, newFee);
+      const receipt = await tx.wait();
+      return receipt;
+    },
+    [ipfsChat]
+  );
 };

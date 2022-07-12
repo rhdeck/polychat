@@ -1,52 +1,42 @@
-import { eth_getEncryptionPublicKey } from "@raydeck/metamask-ts";
-import { useAccount } from "@raydeck/usemetamask";
-import { Fragment, useCallback } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useMain } from "./Main";
 import Message from "./Message";
-import { useMyMessages, useMyPublicKey, useSetPublicKey } from "./useIPFSChat";
+import { useMyMessages, useMyPublicKey } from "./useIPFSChat";
 
-export default function Example() {
+export default function Messages() {
+  const { setTitle } = useMain();
+  useEffect(() => {
+    setTitle("My Messages");
+  }, [setTitle]);
   const messages = useMyMessages();
-  const address = useAccount();
   const publicKey = useMyPublicKey();
-  const setPublicKey = useSetPublicKey();
-  const writePublicKey = useCallback(async () => {
-    const publicKey = await eth_getEncryptionPublicKey(address);
-    await setPublicKey(publicKey);
-  }, [setPublicKey, address]);
   return (
     <div>
       {publicKey && (
-        <Fragment>
-          <button onClick={writePublicKey}>Public Key is {publicKey}</button>
-          <Link type="button" to="/compose">
+        <div>
+          <Link
+            type="button"
+            to="/compose"
+            className="p-2 bg-blue-600 text-white hover:text-gray-200 rounded-md border-1 "
+          >
             Compose new message
           </Link>
-        </Fragment>
+        </div>
       )}
-      {!publicKey && <button onClick={writePublicKey}>Add Public Key</button>}
-
-      <ul role="list" className="divide-y divide-gray-200">
-        {messages.map(({ blockNumber, cid, from }) => (
-          <li key={cid} className="py-4">
-            <div className="flex space-x-3">
-              {/* <img
-                className="h-6 w-6 rounded-full"
-                src={activityItem.person.imageUrl}
-                alt=""
-              /> */}
-              <div className="flex-1 space-y-1">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-medium">{from}</h3>
-                  <p className="text-sm text-gray-500">{blockNumber}</p>
-                </div>
-                <p className="text-sm text-gray-500">{cid}</p>
-                <Message ipfsPath={cid} />
-              </div>
-            </div>
-          </li>
-        ))}
-      </ul>
+      {!publicKey && <div>You have no messages</div>}
+      {messages.length && (
+        <ul className="divide-y divide-gray-200">
+          {messages.map(({ blockNumber, cid, from }) => (
+            <Message
+              ipfsPath={cid}
+              blockNumber={blockNumber}
+              from={from}
+              publicKey={publicKey!}
+            />
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

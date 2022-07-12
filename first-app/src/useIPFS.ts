@@ -20,7 +20,6 @@ export const useIPFS = (cid: string | undefined) => {
       setIPFS(buf);
     }
   }, [cid]);
-  console.log("ipfs is ", ipfs?.toString("utf8"));
   return ipfs;
 };
 

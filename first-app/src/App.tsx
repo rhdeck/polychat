@@ -8,8 +8,8 @@ import Disconnected from "./Disconnected";
 import GetMetamask from "./GetMetamask";
 import Main from "./Main";
 import { ToastContainer } from "react-toastify";
-import { setIPFSChatAddress } from "./useIPFSChat";
-setIPFSChatAddress("0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1");
+import "react-toastify/dist/ReactToastify.css";
+import WrongChain from "./WrongChain";
 export default function App() {
   return (
     <Fragment>
@@ -20,6 +20,7 @@ export default function App() {
         <Disconnected />
       </MetamaskDisconnected>
       <MetamaskConnected>
+        <WrongChain />
         <Main />
       </MetamaskConnected>
       <ToastContainer />
