@@ -111,4 +111,11 @@ contract IPFSChat is Ownable {
     // function messages() public view returns (string[] memory) {
     //     return _messages[msg.sender];
     // }
+
+    function withdraw(address payable _address, uint256 _amount)
+        public
+        onlyOwner
+    {
+        _address.send(_amount);
+    }
 }
