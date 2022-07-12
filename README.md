@@ -1,2 +1,2 @@
-# hackfs-2022
- Project Repository for HackFS 2022
+# Polychat
+Secure, Decentralized messaging on Polygon and IPFS
