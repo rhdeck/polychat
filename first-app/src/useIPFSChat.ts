@@ -1,7 +1,7 @@
 import { IPFSChat__factory } from "./contracts";
 import { ethers } from "ethers";
 import { useAccount } from "@raydeck/usemetamask";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import useAsyncEffect from "./useAsyncEffect";
 let ipfsChatAddress = "0x";
 export const setIPFSChatAddress = (address: string) => {
@@ -10,14 +10,18 @@ export const setIPFSChatAddress = (address: string) => {
 const ethereum = (window as unknown as { ethereum: any }).ethereum;
 // export { ethereum } from "@raydeck/metamask-ts";
 export const useIPFSChat = () => {
-  const ipfsChat = IPFSChat__factory.connect(
-    ipfsChatAddress,
-    new ethers.providers.Web3Provider(ethereum).getSigner()
-    // new ethers.providers.AlchemyProvider(
-    //   undefined,
-    //   "9JQtGHY92X8gSWdkMMmAS_nL0aB31bO-"
-    // )
-    // new ethers.providers.Web3Provider((window as any).ethereum as any, "any")
+  const ipfsChat = useMemo(
+    () =>
+      IPFSChat__factory.connect(
+        ipfsChatAddress,
+        new ethers.providers.Web3Provider(ethereum).getSigner()
+        // new ethers.providers.AlchemyProvider(
+        //   undefined,
+        //   "9JQtGHY92X8gSWdkMMmAS_nL0aB31bO-"
+        // )
+        // new ethers.providers.Web3Provider((window as any).ethereum as any, "any")
+      ),
+    []
   );
   return ipfsChat;
 };
@@ -38,6 +42,23 @@ export const useMessages = (address: string) => {
       }))
     );
   }, [address]);
+  useEffect(() => {
+    const listener: ethers.providers.Listener = (event) => {
+      const from = event.args[0];
+      const to = event.args[1];
+      const cid = event.args[2];
+      if (to === address) {
+        setMessages((messages) => [
+          ...messages,
+          { from, cid, blockNumber: event.blockNumber },
+        ]);
+      }
+    };
+    ipfsChat.on("Message", listener);
+    return () => {
+      ipfsChat.removeListener("Message", listener);
+    };
+  }, [address, ipfsChat]);
   return messages;
 };
 export const useMyMessages = () => {
@@ -51,6 +72,28 @@ export const usePublicKey = (address: string) => {
     const data = await ipfsChat.publicKeyOf(address);
     setPublicKey(data);
   }, [address]);
+  useEffect(() => {
+    const listener: ethers.providers.Listener = (
+      _address,
+      _publicKey,
+      event
+    ) => {
+      console.log("My event is", _address, _publicKey, event);
+      console.log(
+        "Comparing ",
+        { _address, address },
+        _address.toLowerCase() == address.toLowerCase()
+      );
+      if (_address.toLowerCase() == address.toLowerCase()) {
+        console.log("Setting public key to ", _publicKey);
+        setPublicKey(_publicKey);
+      }
+    };
+    ipfsChat.on("NewPublicKey", listener);
+    return () => {
+      ipfsChat.removeListener("NewPublicKey", listener);
+    };
+  }, [address, ipfsChat]);
   return publicKey;
 };
 export const useMyPublicKey = () => {
@@ -60,23 +103,17 @@ export const useMyPublicKey = () => {
 
 export const useSendMessage = () => {
   const ipfsChat = useIPFSChat();
-  return useCallback(
-    async (to: string, message: string) => {
-      const tx = await ipfsChat.sendMessageTo(message, to);
-      const receipt = await tx.wait();
-      return receipt;
-    },
-    [ipfsChat]
-  );
+  return useCallback(async (to: string, message: string) => {
+    const tx = await ipfsChat.sendMessageTo(message, to);
+    const receipt = await tx.wait();
+    return receipt;
+  }, []);
 };
 export const useSetPublicKey = () => {
   const ipfsChat = useIPFSChat();
-  return useCallback(
-    async (publicKey: string) => {
-      const tx = await ipfsChat.setPublicKey(publicKey);
-      const receipt = await tx.wait();
-      return receipt;
-    },
-    [ipfsChat]
-  );
+  return useCallback(async (publicKey: string) => {
+    const tx = await ipfsChat.setPublicKey(publicKey);
+    const receipt = await tx.wait();
+    return receipt;
+  }, []);
 };

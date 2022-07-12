@@ -2,7 +2,7 @@
 pragma solidity ^0.8.9;
 
 // Import this file to use console.log
-import "hardhat/console.sol";
+// import "hardhat/console.sol";
 
 contract IPFSChat{
     mapping (address => string) public publicKeys;
@@ -10,12 +10,13 @@ contract IPFSChat{
     mapping (address => uint) public messageCount;
 
     event Message(address _sender, address indexed _recepient, string _message);
-
+    event NewPublicKey(address indexed _account, string _publicKey);
     // constructor() {
     //     publicKeys[msg.sender] = msg.sender.toString();
     // }
     function setPublicKey(string memory _public_key) public {
         publicKeys[msg.sender] = _public_key;
+        emit NewPublicKey(msg.sender, _public_key);
     }
 
     function publicKeyOf(address _address) public view returns (string memory) {
@@ -25,7 +26,8 @@ contract IPFSChat{
     function sendMessageTo(string memory _message, address _address) public {
         // _messages[_address].push(_message);
         // messageCount[_address]++;
-        require(bytes(publicKeys[_address]).length > 0, "Public key not added");
+        require(bytes(publicKeys[_address]).length > 0, "Recipient public key not added");
+        require(bytes(publicKeys[msg.sender]).length > 0, "Sender public key not added");
         emit Message(msg.sender, _address, _message);
     }
 

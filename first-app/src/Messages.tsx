@@ -1,6 +1,6 @@
 import { eth_getEncryptionPublicKey } from "@raydeck/metamask-ts";
 import { useAccount } from "@raydeck/usemetamask";
-import { useCallback } from "react";
+import { Fragment, useCallback } from "react";
 import { Link } from "react-router-dom";
 import Message from "./Message";
 import { useMyMessages, useMyPublicKey, useSetPublicKey } from "./useIPFSChat";
@@ -17,12 +17,15 @@ export default function Example() {
   return (
     <div>
       {publicKey && (
-        <button onClick={writePublicKey}>Public Key is {publicKey}</button>
+        <Fragment>
+          <button onClick={writePublicKey}>Public Key is {publicKey}</button>
+          <Link type="button" to="/compose">
+            Compose new message
+          </Link>
+        </Fragment>
       )}
       {!publicKey && <button onClick={writePublicKey}>Add Public Key</button>}
-      <Link type="button" to="/compose">
-        Compose new message
-      </Link>
+
       <ul role="list" className="divide-y divide-gray-200">
         {messages.map(({ blockNumber, cid, from }) => (
           <li key={cid} className="py-4">

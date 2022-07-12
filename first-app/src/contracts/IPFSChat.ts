@@ -85,9 +85,11 @@ export interface IPFSChatInterface extends utils.Interface {
 
   events: {
     "Message(address,address,string)": EventFragment;
+    "NewPublicKey(address,string)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Message"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "NewPublicKey"): EventFragment;
 }
 
 export interface MessageEventObject {
@@ -101,6 +103,17 @@ export type MessageEvent = TypedEvent<
 >;
 
 export type MessageEventFilter = TypedEventFilter<MessageEvent>;
+
+export interface NewPublicKeyEventObject {
+  _account: string;
+  _publicKey: string;
+}
+export type NewPublicKeyEvent = TypedEvent<
+  [string, string],
+  NewPublicKeyEventObject
+>;
+
+export type NewPublicKeyEventFilter = TypedEventFilter<NewPublicKeyEvent>;
 
 export interface IPFSChat extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -221,6 +234,15 @@ export interface IPFSChat extends BaseContract {
       _recepient?: PromiseOrValue<string> | null,
       _message?: null
     ): MessageEventFilter;
+
+    "NewPublicKey(address,string)"(
+      _account?: PromiseOrValue<string> | null,
+      _publicKey?: null
+    ): NewPublicKeyEventFilter;
+    NewPublicKey(
+      _account?: PromiseOrValue<string> | null,
+      _publicKey?: null
+    ): NewPublicKeyEventFilter;
   };
 
   estimateGas: {

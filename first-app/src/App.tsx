@@ -9,7 +9,7 @@ import GetMetamask from "./GetMetamask";
 import Main from "./Main";
 import { ToastContainer } from "react-toastify";
 import { setIPFSChatAddress } from "./useIPFSChat";
-setIPFSChatAddress("0x5FbDB2315678afecb367f032d93F642f64180aa3");
+setIPFSChatAddress("0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1");
 export default function App() {
   return (
     <Fragment>
