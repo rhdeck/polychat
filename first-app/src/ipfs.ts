@@ -1,4 +1,5 @@
-const NFTSTORAGE_APIKEY = "NOSOUPFORYOU";
+const NFTSTORAGE_APIKEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGRkYzA3NkIzRDU3YzFhRDhBMzVjMWFjMGJBNDAyQzkwQTUyN2I5MzciLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1NzQwMTUwNDI5MywibmFtZSI6ImZpcnN0dGVzdCJ9.4BKFOMYWx-Fy1ldGW9vfYQKxzHuEVlL6WRUeHLuqzr8";
 export const upload = async (buf: Buffer) => {
   //   const cid = "bafkreiaeppbzsvhoxifxq3dgwmiidto2p3j3agfb3vn5e3ur2rlhg5rqj4";
   const formData = new FormData();
