@@ -8,7 +8,7 @@ import useAsyncEffect from "./useAsyncEffect";
 import copy from "clipboard-copy";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { ethereum, provider } from "./useIPFSChat";
+import { ethereum, provider } from "./usePolyChat";
 const Message: FC<{
   ipfsPath: string;
   blockNumber: number;

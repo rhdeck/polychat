@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useMain } from "./Main";
 import Message from "./Message";
-import { useMyMessages, useMyPublicKey } from "./useIPFSChat";
+import { useMyMessages, useMyPublicKey } from "./usePolyChat";
 
 export default function Messages() {
   const { setTitle } = useMain();

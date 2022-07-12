@@ -1,7 +1,7 @@
 import { wallet_switchEthereumChain } from "@raydeck/metamask-ts";
 import { useChainId } from "@raydeck/usemetamask";
 import { Fragment } from "react";
-import { addresses } from "./useIPFSChat";
+import { addresses } from "./usePolyChat";
 import Logo from "./logo.png";
 const chainNames: Record<number, string> = {
   1: "mainnet",

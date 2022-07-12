@@ -1,4 +1,4 @@
-import { IPFSChat__factory } from "./contracts";
+import { PolyChat__factory } from "./contracts";
 import { BigNumber, ethers } from "ethers";
 import { useAccount, useChainId } from "@raydeck/usemetamask";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -9,25 +9,25 @@ export const addresses: Record<string, string> = {
 };
 export const ethereum = (window as unknown as { ethereum: any }).ethereum;
 export const provider = new ethers.providers.Web3Provider(ethereum);
-export const useIPFSChat = () => {
+export const usePolyChat = () => {
   const chainId = useChainId();
-  const ipfsChatAddress = addresses[chainId]
+  const polyChatAddress = addresses[chainId]
     ? addresses[chainId]
     : addresses["31337"];
-  const ipfsChat = useMemo(
-    () => IPFSChat__factory.connect(ipfsChatAddress, provider.getSigner()),
-    [ipfsChatAddress]
+  const polyChat = useMemo(
+    () => PolyChat__factory.connect(polyChatAddress, provider.getSigner()),
+    [polyChatAddress]
   );
-  return ipfsChat;
+  return polyChat;
 };
 export const useMessages = (address: string) => {
   const [messages, setMessages] = useState<
     { from: string; cid: string; blockNumber: number }[]
   >([]);
-  const ipfsChat = useIPFSChat();
+  const polyChat = usePolyChat();
   useAsyncEffect(async () => {
-    const filter = ipfsChat.filters.Message(undefined, address, undefined);
-    const events = await ipfsChat.queryFilter(filter);
+    const filter = polyChat.filters.Message(undefined, address, undefined);
+    const events = await polyChat.queryFilter(filter);
     setMessages(
       events
         .map((event) => ({
@@ -47,11 +47,11 @@ export const useMessages = (address: string) => {
         ]);
       }
     };
-    ipfsChat.on("Message", listener);
+    polyChat.on("Message", listener);
     return () => {
-      ipfsChat.removeListener("Message", listener);
+      polyChat.removeListener("Message", listener);
     };
-  }, [address, ipfsChat]);
+  }, [address, polyChat]);
   return messages;
 };
 export const useMyMessages = () => {
@@ -59,10 +59,10 @@ export const useMyMessages = () => {
   return useMessages(address);
 };
 export const usePublicKey = (address: string) => {
-  const ipfsChat = useIPFSChat();
+  const polyChat = usePolyChat();
   const [publicKey, setPublicKey] = useState<string>();
   useAsyncEffect(async () => {
-    const data = await ipfsChat.publicKeyOf(address);
+    const data = await polyChat.publicKeyOf(address);
     setPublicKey(data);
   }, [address]);
   useEffect(() => {
@@ -75,11 +75,11 @@ export const usePublicKey = (address: string) => {
         setPublicKey(_publicKey);
       }
     };
-    ipfsChat.on("NewPublicKey", listener);
+    polyChat.on("NewPublicKey", listener);
     return () => {
-      ipfsChat.removeListener("NewPublicKey", listener);
+      polyChat.removeListener("NewPublicKey", listener);
     };
-  }, [address, ipfsChat]);
+  }, [address, polyChat]);
   return publicKey;
 };
 export const useMyPublicKey = () => {
@@ -88,44 +88,44 @@ export const useMyPublicKey = () => {
 };
 
 export const useSendMessage = () => {
-  const ipfsChat = useIPFSChat();
+  const polyChat = usePolyChat();
   return useCallback(
     async (to: string, message: string) => {
-      const tx = await ipfsChat.sendMessageTo(message, to);
+      const tx = await polyChat.sendMessageTo(message, to);
       const receipt = await tx.wait();
       return receipt;
     },
-    [ipfsChat]
+    [polyChat]
   );
 };
 export const useSetPublicKey = () => {
-  const ipfsChat = useIPFSChat();
+  const polyChat = usePolyChat();
   return useCallback(
     async (publicKey: string) => {
-      const tx = await ipfsChat.setPublicKey(publicKey);
+      const tx = await polyChat.setPublicKey(publicKey);
       const receipt = await tx.wait();
       return receipt;
     },
-    [ipfsChat]
+    [polyChat]
   );
 };
 export const useGetFeeForRecipient = () => {
-  const ipfsChat = useIPFSChat();
+  const polyChat = usePolyChat();
   return useCallback(
     async (recipient: string) => {
-      return ipfsChat.messagingFeeFor(recipient);
+      return polyChat.messagingFeeFor(recipient);
     },
-    [ipfsChat]
+    [polyChat]
   );
 };
 export const useFee = (address: string) => {
-  const ipfsChat = useIPFSChat();
+  const polyChat = usePolyChat();
   const globalFee = useGlobalFee();
   const globalFeeRef = useRef(BigNumber.from(0));
   globalFeeRef.current = globalFee || BigNumber.from(0);
   const [fee, setFee] = useState<BigNumber>();
   useAsyncEffect(async () => {
-    const data = await ipfsChat.messagingFeeFor(address);
+    const data = await polyChat.messagingFeeFor(address);
     setFee(data);
   }, [address]);
   useEffect(() => {
@@ -134,11 +134,11 @@ export const useFee = (address: string) => {
         setFee((_fee as BigNumber).add(globalFeeRef.current));
       }
     };
-    ipfsChat.on("NewMessagingFee", listener);
+    polyChat.on("NewMessagingFee", listener);
     return () => {
-      ipfsChat.removeListener("NewMessagingFee", listener);
+      polyChat.removeListener("NewMessagingFee", listener);
     };
-  }, [address, ipfsChat]);
+  }, [address, polyChat]);
   return fee;
 };
 export const useMyFee = () => {
@@ -146,42 +146,42 @@ export const useMyFee = () => {
   return useFee(address);
 };
 export const useGlobalFee = () => {
-  const ipfsChat = useIPFSChat();
+  const polyChat = usePolyChat();
   const [fee, setFee] = useState<BigNumber>();
   useAsyncEffect(async () => {
-    const data = await ipfsChat.globalMessagingFee();
+    const data = await polyChat.globalMessagingFee();
     setFee(data);
   }, []);
   useEffect(() => {
     const listener: ethers.providers.Listener = (_fee, event) => {
       setFee(_fee);
     };
-    ipfsChat.on("NewGlobalMessagingFee", listener);
+    polyChat.on("NewGlobalMessagingFee", listener);
     return () => {
-      ipfsChat.removeListener("NewGlobalMessagingFee", listener);
+      polyChat.removeListener("NewGlobalMessagingFee", listener);
     };
-  }, [ipfsChat]);
+  }, [polyChat]);
   return fee;
 };
 export const useSetFee = () => {
-  const ipfsChat = useIPFSChat();
+  const polyChat = usePolyChat();
   return useCallback(
     async (newFee: BigNumber) => {
-      const tx = await ipfsChat.setMessagingFee(newFee);
+      const tx = await polyChat.setMessagingFee(newFee);
       const receipt = await tx.wait();
       return receipt;
     },
-    [ipfsChat]
+    [polyChat]
   );
 };
 export const useSetWhitelistFee = () => {
-  const ipfsChat = useIPFSChat();
+  const polyChat = usePolyChat();
   return useCallback(
     async (sender: string, newFee: BigNumber) => {
-      const tx = await ipfsChat.setWhiteListFee(sender, newFee);
+      const tx = await polyChat.setWhiteListFee(sender, newFee);
       const receipt = await tx.wait();
       return receipt;
     },
-    [ipfsChat]
+    [polyChat]
   );
 };

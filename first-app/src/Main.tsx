@@ -15,7 +15,7 @@ import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 import Settings from "./Settings";
 import Logo from "./logo.png";
 import { useChainId } from "@raydeck/usemetamask";
-import { addresses } from "./useIPFSChat";
+import { addresses } from "./usePolyChat";
 import { wallet_switchEthereumChain } from "@raydeck/metamask-ts";
 
 /* This example requires Tailwind CSS v2.0+ */

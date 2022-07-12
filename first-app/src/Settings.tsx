@@ -10,7 +10,7 @@ import {
   useMyPublicKey,
   useSetFee,
   useSetPublicKey,
-} from "./useIPFSChat";
+} from "./usePolyChat";
 
 const Settings: FC = () => {
   const { setTitle } = useMain();

@@ -11,7 +11,7 @@ import {
   useFormikContext,
 } from "formik";
 import { encrypt } from "./crypt";
-import { useGetFeeForRecipient, useIPFSChat } from "./useIPFSChat";
+import { useGetFeeForRecipient, usePolyChat } from "./usePolyChat";
 import { upload } from "./ipfs";
 import { BigNumber, ethers, utils } from "ethers";
 import useAsyncEffect from "./useAsyncEffect";
@@ -20,7 +20,7 @@ const symbol = "MATIC";
 const Editor: FC = () => {
   const { to } = useParams();
 
-  const ipfsChat = useIPFSChat();
+  const polyChat = usePolyChat();
   const navigate = useNavigate();
   const getMessagingFee = useGetFeeForRecipient();
   const [messagingFee, setMessagingFee] = useState(BigNumber.from(0));
@@ -45,11 +45,11 @@ const Editor: FC = () => {
         initialValues={{ html: "<p>Hello World!</p>", to: to || "" }}
         onSubmit={async (values, { setSubmitting }) => {
           setSubmitting(true);
-          const publicKey = await ipfsChat.publicKeyOf(values.to);
+          const publicKey = await polyChat.publicKeyOf(values.to);
           const blob = encrypt(Buffer.from(values.html, "utf8"), publicKey);
           const cid: string = await upload(blob);
           const messagingFee = await getMessagingFee(values.to);
-          const txn = await ipfsChat.sendMessageTo("ipfs://" + cid, values.to, {
+          const txn = await polyChat.sendMessageTo("ipfs://" + cid, values.to, {
             value: messagingFee,
           });
           await txn.wait();
