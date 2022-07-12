@@ -43,11 +43,8 @@ export const useMessages = (address: string) => {
     );
   }, [address]);
   useEffect(() => {
-    const listener: ethers.providers.Listener = (event) => {
-      const from = event.args[0];
-      const to = event.args[1];
-      const cid = event.args[2];
-      if (to === address) {
+    const listener: ethers.providers.Listener = (from, to, cid, event) => {
+      if (to.toLowerCase() === address.toLowerCase) {
         setMessages((messages) => [
           ...messages,
           { from, cid, blockNumber: event.blockNumber },
