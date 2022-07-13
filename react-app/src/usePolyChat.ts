@@ -16,7 +16,7 @@ export const usePolyChat = () => {
   const chainIdDec = parseInt(chainId, 16).toString(10);
   const polyChatAddress = addresses[chainIdDec]
     ? addresses[chainIdDec]
-    : addresses["31337"];
+    : addresses["137"];
   const polyChat = useMemo(
     () => PolyChat__factory.connect(polyChatAddress, provider.getSigner()),
     [polyChatAddress]
