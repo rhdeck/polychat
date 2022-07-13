@@ -39,12 +39,17 @@ const Settings: FC = () => {
     <Fragment>
       {publicKey && (
         <div>
-          {" "}
           Public Key is all set:{" "}
           <span className="text-gray-500">
             {publicKey.substring(0, 4)}...
             {publicKey.substring(publicKey.length - 4, publicKey.length)}
           </span>
+          <button
+            className="ml-2 rounded-md bg-blue-600 p-1 text-xs font-semibold text-gray-200 hover:text-white transition hover:scale-105"
+            onClick={writePublicKey}
+          >
+            Reset
+          </button>
         </div>
       )}
       {!publicKey && (
