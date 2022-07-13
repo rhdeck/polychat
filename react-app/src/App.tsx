@@ -19,7 +19,7 @@ export default function App() {
     if (chainId) {
       if (!chainIdRef.current) {
         chainIdRef.current = chainId;
-      } else {
+      } else if (chainIdRef.current !== chainId) {
         window.location.reload();
       }
     }
