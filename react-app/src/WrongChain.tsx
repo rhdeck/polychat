@@ -26,7 +26,7 @@ export default function WrongChain() {
           <span className="text-purple-300">Poly</span>Chat
         </h1>
         <p className="flex flex-row justify-center text-2xl font-bold m-5 text-purple-300">
-          Select to a supported network
+          Select a supported network
         </p>
 
         {Object.entries(addresses).map(([chainId, address]) => (

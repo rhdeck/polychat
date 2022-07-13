@@ -1,8 +1,9 @@
-import { Fragment } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import {
   MetamaskDisconnected,
   MetamaskConnected,
   MetamaskNotInstalled,
+  useChainId,
 } from "@raydeck/usemetamask";
 import Disconnected from "./Disconnected";
 import GetMetamask from "./GetMetamask";
@@ -12,6 +13,18 @@ import "react-toastify/dist/ReactToastify.css";
 import WrongChain from "./WrongChain";
 
 export default function App() {
+  const chainIdRef = useRef("");
+  const chainId = useChainId();
+  useEffect(() => {
+    if (chainId) {
+      if (!chainIdRef.current) {
+        chainIdRef.current = chainId;
+      } else {
+        window.location.reload();
+      }
+    }
+  }, [chainId]);
+
   return (
     <Fragment>
       <MetamaskNotInstalled>
