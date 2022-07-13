@@ -17,7 +17,7 @@ export default function App() {
   const chainId = useChainId();
   useEffect(() => {
     if (chainId) {
-      if (!chainIdRef.current) {
+      if (!chainIdRef.current || chainIdRef.current === "0x0") {
         chainIdRef.current = chainId;
       } else if (chainIdRef.current !== chainId) {
         window.location.reload();
