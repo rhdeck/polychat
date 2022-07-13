@@ -21,6 +21,10 @@
     "build:types": "yarn typechain artifacts/contracts/PolyChat.sol/PolyChat.json --target ethers-v5 --out-dir ../first-app/src/contracts"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.7.0"
+    "@openzeppelin/contracts": "^4.7.0",
+    "@types/node": "^18.0.3",
+    "dotenv": "^16.0.1",
+    "ts-node": "^10.8.2",
+    "typescript": "^4.7.4"
   }
 }

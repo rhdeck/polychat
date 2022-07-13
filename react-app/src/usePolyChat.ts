@@ -6,6 +6,7 @@ import useAsyncEffect from "./useAsyncEffect";
 
 export const addresses: Record<string, string> = {
   "31337": "0x1291Be112d480055DaFd8a610b7d1e203891C274",
+  "80001": "0x9B939e1252aA484246CaA8AB8380b9f926C1c76D",
 };
 export const ethereum = (window as unknown as { ethereum: any }).ethereum;
 export const provider = new ethers.providers.Web3Provider(ethereum);
