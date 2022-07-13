@@ -12,8 +12,9 @@ export const ethereum = (window as unknown as { ethereum: any }).ethereum;
 export const provider = new ethers.providers.Web3Provider(ethereum);
 export const usePolyChat = () => {
   const chainId = useChainId();
-  const polyChatAddress = addresses[chainId]
-    ? addresses[chainId]
+  const chainIdDec = parseInt(chainId, 16).toString(10);
+  const polyChatAddress = addresses[chainIdDec]
+    ? addresses[chainIdDec]
     : addresses["31337"];
   const polyChat = useMemo(
     () => PolyChat__factory.connect(polyChatAddress, provider.getSigner()),
