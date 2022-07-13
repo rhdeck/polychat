@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { FaGithub } from "react-icons/fa";
 import MetaMaskOnboarding from "@metamask/onboarding";
+import Logo from "./logo.png";
 const GetMetamask: FC = () => {
   return (
     <div className="h-screen w-screen flex flex-col justify-center align-center bg-gradient-to-r from-pink-600 to-blue-900 ">
