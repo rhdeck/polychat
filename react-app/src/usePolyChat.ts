@@ -94,8 +94,9 @@ export const useSendMessage = () => {
   return useCallback(
     async (to: string, message: string) => {
       const tx = await polyChat.sendMessageTo(message, to);
-      const receipt = await tx.wait();
-      return receipt;
+      return tx;
+      // const receipt = await tx.wait();
+      // return receipt;
     },
     [polyChat]
   );
@@ -105,8 +106,9 @@ export const useSetPublicKey = () => {
   return useCallback(
     async (publicKey: string) => {
       const tx = await polyChat.setPublicKey(publicKey);
-      const receipt = await tx.wait();
-      return receipt;
+      return tx;
+      // const receipt = await tx.wait();
+      // return receipt;
     },
     [polyChat]
   );
@@ -170,8 +172,9 @@ export const useSetFee = () => {
   return useCallback(
     async (newFee: BigNumber) => {
       const tx = await polyChat.setMessagingFee(newFee);
-      const receipt = await tx.wait();
-      return receipt;
+      return tx;
+      // const receipt = await tx.wait();
+      // return receipt;
     },
     [polyChat]
   );
@@ -181,8 +184,9 @@ export const useSetWhitelistFee = () => {
   return useCallback(
     async (sender: string, newFee: BigNumber) => {
       const tx = await polyChat.setWhiteListFee(sender, newFee);
-      const receipt = await tx.wait();
-      return receipt;
+      return tx;
+      // const receipt = await tx.wait();
+      // return receipt;
     },
     [polyChat]
   );

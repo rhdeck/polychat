@@ -52,7 +52,7 @@ const Editor: FC = () => {
           const txn = await polyChat.sendMessageTo("ipfs://" + cid, values.to, {
             value: messagingFee,
           });
-          await txn.wait();
+          // await txn.wait();
           setSubmitting(false);
           navigate("/");
         }}
