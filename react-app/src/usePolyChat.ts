@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useAsyncEffect from "./useAsyncEffect";
 
 export const addresses: Record<string, string> = {
-  "31337": "0x1291Be112d480055DaFd8a610b7d1e203891C274",
+  // "31337": "0x1291Be112d480055DaFd8a610b7d1e203891C274",
   "80001": "0x9B939e1252aA484246CaA8AB8380b9f926C1c76D",
   "137": "0x7caCE48de94C3513B0E583568664656b7d4A5fDF",
 };
