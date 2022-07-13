@@ -71,7 +71,7 @@ const Settings: FC = () => {
           </button>
         </div>
       )}
-      {myFee && globalFee && formShow && (
+      {formShow && (
         <Formik
           initialValues={{ fee: myDisplayFee }}
           onSubmit={async (values, { setSubmitting }) => {
