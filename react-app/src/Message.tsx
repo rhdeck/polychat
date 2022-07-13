@@ -8,23 +8,14 @@ import useAsyncEffect from "./useAsyncEffect";
 import copy from "clipboard-copy";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { ethereum, provider } from "./usePolyChat";
 const Message: FC<{
   ipfsPath: string;
   blockNumber: number;
   from: string;
   publicKey: string;
 }> = ({ ipfsPath, blockNumber, from, publicKey }) => {
-  const [ens, setEns] = useState<string>();
   const account = useAccount();
   const navigate = useNavigate();
-  console.log({ from });
-  useAsyncEffect(async () => {
-    console.log("getting name from", from);
-    const name = await provider.lookupAddress(from);
-    console.log("Got name of", name, from);
-    if (name) setEns(name);
-  }, []);
   return (
     <li key={ipfsPath} className="py-4">
       <div className="flex space-x-3">
@@ -36,7 +27,7 @@ const Message: FC<{
         <div className="flex-1 space-y-1">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-medium ">
-              From:{" "}
+              <span className="">From:</span>{" "}
               <span
                 className="cursor-pointer hover:text-purple-800"
                 onClick={() => {
@@ -44,7 +35,7 @@ const Message: FC<{
                   toast("Copied to clipboard");
                 }}
               >
-                {ens || from}{" "}
+                {from}{" "}
                 {from.toLowerCase() === account.toLowerCase() && (
                   <span className="text-gray-500 font-xs">(Me)</span>
                 )}

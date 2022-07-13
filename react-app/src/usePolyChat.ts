@@ -10,7 +10,9 @@ export const addresses: Record<string, string> = {
   "137": "0x7caCE48de94C3513B0E583568664656b7d4A5fDF",
 };
 export const ethereum = (window as unknown as { ethereum: any }).ethereum;
-export const provider = new ethers.providers.Web3Provider(ethereum);
+export const provider = ethereum
+  ? new ethers.providers.Web3Provider(ethereum)
+  : undefined;
 export const usePolyChat = () => {
   const chainId = useChainId();
   const chainIdDec = parseInt(chainId, 16).toString(10);
@@ -18,9 +20,13 @@ export const usePolyChat = () => {
     ? addresses[chainIdDec]
     : addresses["137"];
   const polyChat = useMemo(
-    () => PolyChat__factory.connect(polyChatAddress, provider.getSigner()),
+    () =>
+      provider &&
+      PolyChat__factory.connect(polyChatAddress, provider.getSigner()),
     [polyChatAddress]
   );
+
+  if (!polyChat) throw new Error("polyChat is not defined");
   return polyChat;
 };
 export const useMessages = (address: string) => {
