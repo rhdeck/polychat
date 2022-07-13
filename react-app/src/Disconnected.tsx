@@ -24,12 +24,12 @@ const Disconnected: FC = () => {
           Connect to Metamask
         </button>
       </div>
-      <div className="fixed bottom-0 w-screen h-20 bg-black text-white flex flex-row space-between">
-        <div>
-          <Link to="https://github.com/rhdeck/polychat">
-            <FaGithub className="h-8 w-8 mr-2" />
+      <div className="fixed bottom-0 w-screen h-10 p-2 bg-black text-white flex flex-row space-between">
+        <div className="text-xs hover:text-purple-400 transition">
+          <a href="https://github.com/rhdeck/polychat">
+            <FaGithub className="h-6 w-6 mr-2 inline " />
             Source on GitHub
-          </Link>
+          </a>
         </div>
       </div>
     </div>
