@@ -1,6 +1,8 @@
 import { eth_requestAccounts } from "@raydeck/metamask-ts";
 import { FC } from "react";
 import Logo from "./logo.png";
+import { FaGithub } from "react-icons/fa";
+import { Link } from "react-router-dom";
 const Disconnected: FC = () => {
   return (
     <div className="h-screen w-screen flex flex-col justify-center align-center bg-gradient-to-r from-pink-600 to-blue-900 ">
@@ -21,6 +23,14 @@ const Disconnected: FC = () => {
         >
           Connect to Metamask
         </button>
+      </div>
+      <div className="fixed bottom-0 w-screen h-20 bg-black text-white flex flex-row space-between">
+        <div>
+          <Link to="https://github.com/rhdeck/polychat">
+            <FaGithub className="h-8 w-8 mr-2" />
+            Source on GitHub
+          </Link>
+        </div>
       </div>
     </div>
   );

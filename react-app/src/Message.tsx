@@ -95,14 +95,14 @@ const MessageBody: FC<{ ipfsPath: string }> = ({ ipfsPath }) => {
     return (
       <div>
         <button
-          className="p-2 border-1 border-gray-800 rounded-md bg-blue-600 text-white hover:text-gray-500 transition"
+          className="p-2 border-1.5 border-gray-800 rounded-md bg-pink-200 text-purple-800 hover:text-gray-500 transition"
           onClick={() => {
             decrypt(blob, account).then(setDecrypted);
           }}
         >
-          Decrypt
+          Message Encrypted - Click To Decrypt Locally
+          <p className="text-xs text-gray-600">Source: {ipfsPath}</p>
         </button>
-        <p className="text-sm text-gray-500">{ipfsPath}</p>
       </div>
     );
   } else {

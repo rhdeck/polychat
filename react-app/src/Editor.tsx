@@ -1,6 +1,6 @@
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { FC, Fragment, useEffect, useRef, useState } from "react";
+import { FC, Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Formik,
@@ -11,11 +11,14 @@ import {
   useFormikContext,
 } from "formik";
 import { encrypt } from "./crypt";
-import { useGetFeeForRecipient, usePolyChat } from "./usePolyChat";
+import { provider, useGetFeeForRecipient, usePolyChat } from "./usePolyChat";
 import { upload } from "./ipfs";
 import { BigNumber, ethers, utils } from "ethers";
 import useAsyncEffect from "./useAsyncEffect";
 import { useMain } from "./Main";
+import { textSpanContainsPosition } from "typescript";
+import { useENS } from "./useENS";
+import { toast } from "react-toastify";
 const symbol = "MATIC";
 const Editor: FC = () => {
   const { to } = useParams();
@@ -35,8 +38,9 @@ const Editor: FC = () => {
   }, [_to, getMessagingFee]);
   const { setTitle } = useMain();
   useEffect(() => {
-    setTitle("Editor");
+    setTitle("Send a Message");
   }, [setTitle]);
+  const { knownNames, testName } = useENS();
   return (
     <div>
       <Formik
@@ -44,27 +48,39 @@ const Editor: FC = () => {
         validateOnMount={true}
         initialValues={{ html: "<p>Hello World!</p>", to: to || "" }}
         onSubmit={async (values, { setSubmitting }) => {
+          const to = knownNames[values.to] || values.to;
           setSubmitting(true);
-          const publicKey = await polyChat.publicKeyOf(values.to);
+          const publicKey = await polyChat.publicKeyOf(to);
           const blob = encrypt(Buffer.from(values.html, "utf8"), publicKey);
           const cid: string = await upload(blob);
-          const messagingFee = await getMessagingFee(values.to);
-          const txn = await polyChat.sendMessageTo("ipfs://" + cid, values.to, {
+          const messagingFee = await getMessagingFee(to);
+          const txn = await polyChat.sendMessageTo("ipfs://" + cid, to, {
             value: messagingFee,
           });
           // await txn.wait();
           setSubmitting(false);
+          toast(`Queued message to ${values.to}`);
           navigate("/");
+          await txn.wait();
+          toast("Message committed to the blockchain");
         }}
         validate={(values) => {
           const errors: Record<string, string | undefined> = {
             html: undefined,
             to: undefined,
           };
-          if (!values.to || !ethers.utils.isAddress(values.to)) {
+          if (!values.to) {
             errors.to = "Please enter a recipient";
+          } else if (
+            !ethers.utils.isAddress(values.to) &&
+            !knownNames[values.to]
+          ) {
+            errors.to = "Please enter a valid address";
           } else {
             setTo(values.to);
+          }
+          if (values.to.endsWith(".eth")) {
+            testName(values.to);
           }
           if (!values.html || values.html === "<p></p>") {
             errors.html = "Please enter a message";
@@ -77,12 +93,18 @@ const Editor: FC = () => {
         {({ values, isSubmitting, isValid }) => (
           <Form>
             <div className="m-4">
-              <h2>To Address</h2>
+              <div className="text-sm text-gray-600 font-medium">
+                To Address (or ENS .eth name)
+              </div>
               <Field
                 name="to"
                 className="p-2 border border-gray-800 rounded-md w-80 text-xs"
               />
-
+              {knownNames[values.to] && (
+                <div className="text-xs text-purple-800 font-medium">
+                  Resolving to {knownNames[values.to]}
+                </div>
+              )}
               <ErrorMessage
                 component="div"
                 className="block text-xs text-red-600"
@@ -90,7 +112,12 @@ const Editor: FC = () => {
               />
             </div>
             <div className="m-4">
-              <h2>Body</h2>
+              <div className="text-sm text-gray-600 font-medium">Message</div>
+              <div className="text-xs text-gray-600  p-2 bg-pink-200 rounded-md">
+                Compose your message in the gray box below. Feel free to do
+                control/command+b or control/command+i to make bold or italic
+                text.
+              </div>
               <TipTapEditor />
               <ErrorMessage
                 component="div"
@@ -127,7 +154,7 @@ const TipTapEditor = () => {
     editorProps: {
       attributes: {
         class:
-          "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl m-5 ml-0 focus:outline-none bg-gray-100 text-black bg-opacity-80 p-4 rounded-md ",
+          "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl my-5 focus:outline-none bg-gray-100 text-black bg-opacity-80 p-4 rounded-md w-full",
       },
     },
     autofocus: true,

@@ -10,6 +10,7 @@ import Main from "./Main";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import WrongChain from "./WrongChain";
+
 export default function App() {
   return (
     <Fragment>

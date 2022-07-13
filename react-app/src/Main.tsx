@@ -14,19 +14,28 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 import Settings from "./Settings";
 import Logo from "./logo.png";
-import { useChainId } from "@raydeck/usemetamask";
+import { useAccount, useChainId } from "@raydeck/usemetamask";
 import { addresses } from "./usePolyChat";
-import { wallet_switchEthereumChain } from "@raydeck/metamask-ts";
-
-/* This example requires Tailwind CSS v2.0+ */
-
-const user = {
-  name: "Tom Cook",
-  email: "tom@example.com",
-  imageUrl:
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+const chainNames: Record<number, string> = {
+  1: "mainnet",
+  3: "ropsten",
+  4: "rinkeby",
+  5: "goerli",
+  42: "kovan",
+  31337: "hardhat",
+  137: "Polygon Mainnet",
+  80001: "Polygon Mumbai",
 };
-
+const blockExplorers: Record<number, string> = {
+  1: "mainnet",
+  3: "ropsten",
+  4: "rinkeby",
+  5: "goerli",
+  42: "kovan",
+  31337: "hardhat",
+  137: "https://polygonscan.com/address/",
+  80001: "https://mumbai.polygonscan.com/address/",
+};
 const userNavigation = [
   { name: "Your Profile", to: "#" },
   { name: "Settings", to: "#" },
@@ -60,9 +69,12 @@ function Main() {
   const [title, setTitle] = useState("Dashboard");
   const value = useMemo(() => ({ title, setTitle }), [title]);
   const chainId = useChainId();
+  const address = useAccount();
   if (!addresses[parseInt(chainId, 16).toString(10)]) {
     return null;
   }
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+
   return (
     <>
       <div className="min-h-full">
@@ -184,6 +196,23 @@ function Main() {
               {/* /End replace */}
             </div>
           </main>
+        </div>
+      </div>
+      <div className="p-2 flex flex-row justify-end fixed bottom-0 w-full align-right bg-pink-800 border-t-2 border-purple-500">
+        <div className="text-white text-xs">
+          Operating on{" "}
+          <a
+            className="text-purple-300 hover:text-purple-500 transition"
+            href={
+              blockExplorers[parseInt(chainId, 16)] +
+              addresses[parseInt(chainId, 16)]
+            }
+          >
+            {chainNames[parseInt(chainId, 16)] ||
+              "chain " + parseInt(chainId, 16).toString(10)}
+          </a>{" "}
+          with account {address.substring(0, 6)}...
+          {address.substring(address.length - 4)}
         </div>
       </div>
     </>
