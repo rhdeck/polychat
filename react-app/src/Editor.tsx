@@ -77,7 +77,7 @@ const Editor: FC = () => {
           ) {
             errors.to = "Please enter a valid address";
           } else {
-            setTo(values.to);
+            setTo(knownNames[values.to] || values.to);
           }
           if (values.to.endsWith(".eth")) {
             testName(values.to);
