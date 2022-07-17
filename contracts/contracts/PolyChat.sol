@@ -46,6 +46,7 @@ contract PolyChat is Ownable {
     mapping(address => uint256) private _messagingFee;
     mapping(address => mapping(address => uint256))
         private _messagingFeeWhiteList;
+    mapping(address => address[]) public messagingFeeSenders;
     uint256 private _globalMessagingFee;
 
     constructor() {
@@ -84,6 +85,7 @@ contract PolyChat is Ownable {
 
     function setWhiteListFee(address _from, uint256 _newFee) public {
         _messagingFeeWhiteList[msg.sender][_from] = _newFee;
+        messagingFeeSenders[msg.sender].push(_from);
         emit NewWhitelistMessagingFee(msg.sender, _from, _newFee);
     }
 
