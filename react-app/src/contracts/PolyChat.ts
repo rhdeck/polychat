@@ -32,6 +32,7 @@ export interface PolyChatInterface extends utils.Interface {
   functions: {
     "globalMessagingFee()": FunctionFragment;
     "messagingFeeFor(address)": FunctionFragment;
+    "messagingFeeSenders(address,uint256)": FunctionFragment;
     "owner()": FunctionFragment;
     "publicKeyOf(address)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
@@ -48,6 +49,7 @@ export interface PolyChatInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "globalMessagingFee"
       | "messagingFeeFor"
+      | "messagingFeeSenders"
       | "owner"
       | "publicKeyOf"
       | "renounceOwnership"
@@ -67,6 +69,10 @@ export interface PolyChatInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "messagingFeeFor",
     values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "messagingFeeSenders",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -112,6 +118,10 @@ export interface PolyChatInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "messagingFeeFor",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "messagingFeeSenders",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
@@ -270,6 +280,12 @@ export interface PolyChat extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    messagingFeeSenders(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
     owner(overrides?: CallOverrides): Promise<[string]>;
 
     publicKeyOf(
@@ -327,6 +343,12 @@ export interface PolyChat extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  messagingFeeSenders(
+    arg0: PromiseOrValue<string>,
+    arg1: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
   owner(overrides?: CallOverrides): Promise<string>;
 
   publicKeyOf(
@@ -383,6 +405,12 @@ export interface PolyChat extends BaseContract {
       _address: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    messagingFeeSenders(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -498,6 +526,12 @@ export interface PolyChat extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    messagingFeeSenders(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     publicKeyOf(
@@ -555,6 +589,12 @@ export interface PolyChat extends BaseContract {
 
     messagingFeeFor(
       _address: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    messagingFeeSenders(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
