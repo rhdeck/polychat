@@ -1,7 +1,4 @@
-import {
-  eth_getEncryptionPublicKey,
-  onAccountsChanged,
-} from "@raydeck/metamask-ts";
+import { eth_getEncryptionPublicKey } from "@raydeck/metamask-ts";
 import { useAccount, useChainId } from "@raydeck/usemetamask";
 import { utils } from "ethers";
 import { Field, Form, Formik, ErrorMessage } from "formik";
@@ -18,7 +15,6 @@ import {
 import { toast } from "react-toastify";
 import copy from "clipboard-copy";
 import { ClipboardCopyIcon } from "@heroicons/react/outline";
-import { isValidAttribute } from "dompurify";
 const Settings: FC = () => {
   const { setTitle } = useMain();
   const address = useAccount();
