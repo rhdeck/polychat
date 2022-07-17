@@ -11,20 +11,43 @@ import {
   useFormikContext,
 } from "formik";
 import { encrypt } from "./crypt";
-import { provider, useGetFeeForRecipient, usePolyChat } from "./usePolyChat";
+import {
+  provider,
+  useGetFeeForRecipient,
+  useMyPublicKey,
+  usePolyChat,
+} from "./usePolyChat";
 import { upload } from "./ipfs";
 import { BigNumber, ethers, utils } from "ethers";
 import useAsyncEffect from "./useAsyncEffect";
 import { useMain } from "./Main";
-import { textSpanContainsPosition } from "typescript";
 import { useENS } from "./useENS";
 import { toast } from "react-toastify";
+import { useAccount } from "@raydeck/usemetamask";
 const symbol = "MATIC";
+export const useBalance = (account: string) => {
+  const [balance, setBalance] = useState<BigNumber>(BigNumber.from(0));
+  useEffect(() => {
+    (async () => {
+      const _balance = await provider?.getBalance(account);
+      if (typeof _balance !== "undefined") {
+        setBalance(_balance);
+      }
+    })();
+  }, [account]);
+  return balance;
+};
 const Editor: FC = () => {
   const { to } = useParams();
 
   const polyChat = usePolyChat();
   const navigate = useNavigate();
+  const myPublicKey = useMyPublicKey();
+  useEffect(() => {
+    if (myPublicKey === "") {
+      navigate("/settings");
+    }
+  }, [myPublicKey, navigate]);
   const getMessagingFee = useGetFeeForRecipient();
   const [messagingFee, setMessagingFee] = useState(BigNumber.from(0));
   const [_to, setTo] = useState("");
@@ -40,7 +63,10 @@ const Editor: FC = () => {
   useEffect(() => {
     setTitle("Send a Message");
   }, [setTitle]);
+  const account = useAccount();
+  const balance = useBalance(account);
   const { knownNames, testName } = useENS();
+  console.log("balance is ", balance, account);
   return (
     <div>
       <Formik
@@ -50,19 +76,39 @@ const Editor: FC = () => {
         onSubmit={async (values, { setSubmitting }) => {
           const to = knownNames[values.to] || values.to;
           setSubmitting(true);
-          const publicKey = await polyChat.publicKeyOf(to);
+          const rawPublicKey = await polyChat.publicKeyOf(to);
+          const publicKey = ethers.utils.base64.encode(rawPublicKey);
+          console.log("Public key is ", publicKey);
           const blob = encrypt(Buffer.from(values.html, "utf8"), publicKey);
           const cid: string = await upload(blob);
           const messagingFee = await getMessagingFee(to);
-          const txn = await polyChat.sendMessageTo("ipfs://" + cid, to, {
-            value: messagingFee,
-          });
-          // await txn.wait();
-          setSubmitting(false);
-          toast(`Queued message to ${values.to}`);
-          navigate("/");
-          await txn.wait();
-          toast("Message committed to the blockchain");
+          try {
+            const txn = await polyChat.sendMessageTo("ipfs://" + cid, to, {
+              value: messagingFee,
+            });
+            // await txn.wait();
+            setSubmitting(false);
+            toast(`Queued message to ${values.to}`);
+            navigate("/");
+            await txn.wait();
+            toast("Message committed to the blockchain");
+          } catch (e) {
+            const error = e as {
+              data: { code: number; message: string };
+              code: number;
+              message: string;
+            };
+            if (error.data.code === -32000) {
+              toast(
+                "Not enough native tokens in your account for this transaction",
+                {
+                  type: "error",
+                }
+              );
+            } else {
+              toast(error.data.message, { type: "error" });
+            }
+          }
         }}
         validate={(values) => {
           const errors: Record<string, string | undefined> = {
@@ -98,7 +144,7 @@ const Editor: FC = () => {
               </div>
               <Field
                 name="to"
-                className="p-2 border border-gray-800 rounded-md w-80 text-xs"
+                className="p-2 border-2 border-pink-800 rounded-md w-80 text-xs"
               />
               {knownNames[values.to] && (
                 <div className="text-xs text-purple-800 font-medium">
@@ -113,7 +159,7 @@ const Editor: FC = () => {
             </div>
             <div className="m-4">
               <div className="text-sm text-gray-600 font-medium">Message</div>
-              <div className="text-xs text-gray-600  p-2 bg-pink-200 rounded-md">
+              <div className="text-xs text-gray-600  p-2 bg-pink-200 rounded-md border-2 border-pink-800">
                 Compose your message in the gray box below. Feel free to do
                 control/command+b or control/command+i to make bold or italic
                 text.
@@ -127,14 +173,24 @@ const Editor: FC = () => {
             </div>
             <div className="m-4">
               <button
-                disabled={isSubmitting || !isValid}
+                disabled={
+                  isSubmitting ||
+                  !isValid ||
+                  balance.lt(messagingFee.add(utils.parseEther("0.001")))
+                }
                 className={
                   isSubmitting || !isValid
                     ? "p-2 bg-gray-600 text-white  border-gray-800 border-1 rounded-md transition 5"
                     : "p-2 bg-blue-600 text-white hover:text-gray-200 border-gray-800 border-1 rounded-md transition hover:scale-105"
                 }
               >
-                Send message: {utils.formatEther(messagingFee)} {symbol}
+                {balance.lt(messagingFee.add(utils.parseEther("0.001")))
+                  ? `Too little token in account: need at least ${utils.formatEther(
+                      messagingFee.add(utils.parseEther("0.001"))
+                    )} ${symbol}`
+                  : `Send message: ${utils.formatEther(
+                      messagingFee
+                    )} ${symbol}`}
               </button>
             </div>
           </Form>
@@ -154,7 +210,7 @@ const TipTapEditor = () => {
     editorProps: {
       attributes: {
         class:
-          "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl my-5 focus:outline-none bg-gray-100 text-black bg-opacity-80 p-4 rounded-md w-full",
+          "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl my-5 focus:outline-none bg-gray-100 text-black bg-opacity-80 p-4 rounded-md w-full border-pink-800 border-2",
       },
     },
     autofocus: true,

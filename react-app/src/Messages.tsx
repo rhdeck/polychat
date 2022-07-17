@@ -1,9 +1,8 @@
 import { FC, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useMain } from "./Main";
 import Message from "./Message";
 import { useMyMessages, useMyPublicKey } from "./usePolyChat";
-import { CheckIcon, PlusIcon } from "@heroicons/react/outline";
 import Logo from "./logo.png";
 export default function Messages() {
   const { setTitle } = useMain();

@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useAsyncEffect from "./useAsyncEffect";
 
 export const addresses: Record<string, string> = {
-  // "31337": "0x1291Be112d480055DaFd8a610b7d1e203891C274",
+  // "1337": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
   "80001": "0x9B939e1252aA484246CaA8AB8380b9f926C1c76D",
   "137": "0x7caCE48de94C3513B0E583568664656b7d4A5fDF",
 };
@@ -72,7 +72,8 @@ export const usePublicKey = (address: string) => {
   const [publicKey, setPublicKey] = useState<string>();
   useAsyncEffect(async () => {
     const data = await polyChat.publicKeyOf(address);
-    setPublicKey(data);
+    const publicKey = ethers.utils.base64.encode(data);
+    setPublicKey(publicKey);
   }, [address]);
   useEffect(() => {
     const listener: ethers.providers.Listener = (
@@ -112,10 +113,10 @@ export const useSetPublicKey = () => {
   const polyChat = usePolyChat();
   return useCallback(
     async (publicKey: string) => {
-      const tx = await polyChat.setPublicKey(publicKey);
+      const bytes = ethers.utils.base64.decode(publicKey);
+      const decodedPublicKey = ethers.utils.hexlify(bytes);
+      const tx = await polyChat.setPublicKey(decodedPublicKey);
       return tx;
-      // const receipt = await tx.wait();
-      // return receipt;
     },
     [polyChat]
   );

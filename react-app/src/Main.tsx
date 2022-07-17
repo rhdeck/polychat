@@ -30,17 +30,19 @@ const chainNames: Record<number, string> = {
   4: "rinkeby",
   5: "goerli",
   42: "kovan",
-  31337: "hardhat",
+  31337: "Hardhat 3",
+  1337: "Hardhat",
   137: "Polygon Mainnet",
   80001: "Polygon Mumbai",
 };
 const blockExplorers: Record<number, string> = {
-  1: "mainnet",
-  3: "ropsten",
-  4: "rinkeby",
-  5: "goerli",
-  42: "kovan",
-  31337: "hardhat",
+  // 1: "mainnet",
+  // 3: "ropsten",
+  // 4: "rinkeby",
+  // 5: "goerli",
+  // 42: "kovan",
+  // 31337: "Hardhat 3",
+  // 1337: "Hardhat",
   137: "https://polygonscan.com/address/",
   80001: "https://mumbai.polygonscan.com/address/",
 };
@@ -85,8 +87,8 @@ function Main() {
 
   return (
     <>
-      <div className="min-h-full">
-        <Disclosure as="nav" className="bg-pink-300 border-b border-gray-200">
+      <div className="min-h-screen bg-purple-200">
+        <Disclosure as="nav" className="bg-purple-800 border-b border-gray-200">
           {({ open }) => (
             <>
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -111,8 +113,8 @@ function Main() {
                           to={item.to}
                           className={classNames(
                             item.current
-                              ? "border-purple-800 text-gray-900"
-                              : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700",
+                              ? "border-pink-800 text-gray-200"
+                              : "border-transparent text-gray-200 hover:border-gray-300 hover:text-gray-400",
                             "inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
                           )}
                           aria-current={item.current ? "page" : undefined}
@@ -125,7 +127,7 @@ function Main() {
                   <div className="hidden sm:ml-6 sm:flex sm:items-center">
                     <button
                       type="button"
-                      className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                      className="bg-white p-1 rounded-full text-gray-200 hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
                       <span className="sr-only">View notifications</span>
                       <BellIcon className="h-6 w-6" aria-hidden="true" />
@@ -133,7 +135,7 @@ function Main() {
                   </div>
                   <div className="-mr-2 flex items-center sm:hidden">
                     {/* Mobile menu button */}
-                    <Disclosure.Button className="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <Disclosure.Button className="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-200 hover:text-gray-400 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                       <span className="sr-only">Open main menu</span>
                       {open ? (
                         <XIcon className="block h-6 w-6" aria-hidden="true" />
@@ -157,7 +159,7 @@ function Main() {
                       className={classNames(
                         item.current
                           ? "bg-indigo-50 border-indigo-500 text-indigo-700"
-                          : "border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800",
+                          : "border-transparent text-gray-200 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-400",
                         "block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
                       )}
                       aria-current={item.current ? "page" : undefined}
@@ -173,7 +175,7 @@ function Main() {
                         key={item.name}
                         as="a"
                         onClick={() => navigate(item.to)}
-                        className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                        className="block px-4 py-2 text-base font-medium text-gray-200 hover:text-gray-400 hover:bg-gray-100"
                       >
                         {item.name}
                       </Disclosure.Button>
@@ -188,7 +190,7 @@ function Main() {
         <div className="py-10">
           <header>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <h1 className="text-3xl font-bold leading-tight text-gray-900">
+              <h1 className="text-5xl font-bold leading-tight text-gray-900">
                 {title}
               </h1>
             </div>
@@ -206,19 +208,26 @@ function Main() {
           </main>
         </div>
       </div>
-      <div className="p-2 flex flex-row justify-end fixed bottom-0 w-full align-right bg-pink-800 border-t-2 border-purple-500">
+      <div className="p-2 flex flex-row justify-end fixed bottom-0 w-full align-right bg-purple-800 border-t-2 border-purple-500">
         <div className="text-white text-xs">
           Operating on{" "}
-          <a
-            className="text-purple-300 hover:text-purple-500 transition"
-            href={
-              blockExplorers[parseInt(chainId, 16)] +
-              addresses[parseInt(chainId, 16)]
-            }
-          >
-            {chainNames[parseInt(chainId, 16)] ||
-              "chain " + parseInt(chainId, 16).toString(10)}
-          </a>{" "}
+          {blockExplorers[parseInt(chainId, 16)] ? (
+            <a
+              className="text-purple-300 hover:text-purple-500 transition"
+              href={
+                blockExplorers[parseInt(chainId, 16)] +
+                addresses[parseInt(chainId, 16)]
+              }
+            >
+              {chainNames[parseInt(chainId, 16)] ||
+                "chain " + parseInt(chainId, 16).toString(10)}
+            </a>
+          ) : (
+            <span className="">
+              {chainNames[parseInt(chainId, 16)] ||
+                "chain " + parseInt(chainId, 16).toString(10)}
+            </span>
+          )}{" "}
           with account {address.substring(0, 6)}...
           {address.substring(address.length - 4)}
         </div>

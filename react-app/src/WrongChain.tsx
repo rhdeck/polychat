@@ -11,7 +11,8 @@ const chainNames: Record<number, string> = {
   4: "rinkeby",
   5: "goerli",
   42: "kovan",
-  31337: "hardhat",
+  31337: "Hardhat 31337",
+  1337: "Hardhat 1337",
   137: "Polygon Mainnet",
   80001: "Polygon Mumbai",
 };

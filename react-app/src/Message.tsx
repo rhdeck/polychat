@@ -49,7 +49,7 @@ const Message: FC<{
                 Reply
               </button>
             </h3>
-            <p className="text-sm text-gray-500">{blockNumber}</p>
+            <p className="text-sm text-gray-500">Block: {blockNumber}</p>
           </div>
 
           <MessageBody ipfsPath={ipfsPath} />

@@ -37,6 +37,12 @@ const Settings: FC = () => {
       toast("Public Key saved to the smart contract");
     }
   }, [setPublicKey, address, publicKey]);
+  const removePublicKey = useCallback(async () => {
+    const tx = await setPublicKey("");
+    toast("Public key updated, pending confrmation on the blockchain");
+    await tx.wait();
+    toast("Public Key removed from the smart contract");
+  }, [setPublicKey]);
   const setFee = useSetFee();
   const myFee = useMyFee();
   const globalFee = useGlobalFee();
@@ -49,9 +55,9 @@ const Settings: FC = () => {
   const chainId = useChainId();
   return (
     <Fragment>
-      {publicKey && (
+      {publicKey && publicKey !== "0x" && (
         <Fragment>
-          <div className="rounded-md bg-pink-200 p-4 border-1.5 border-pink-500 m-5">
+          <div className="rounded-md bg-pink-200 p-4 border-1.5 border-pink-500 m-5 border-2 border-pink-800">
             <span className="font-bold">Public Key</span> is all set:{" "}
             <span
               className="text-gray-500 hover:text-gray-700 cursor-pointer"
@@ -69,6 +75,12 @@ const Settings: FC = () => {
               onClick={writePublicKey}
             >
               Reset
+            </button>
+            <button
+              className="ml-2 rounded-md bg-red-600 p-1 text-xs font-semibold text-gray-200 hover:text-white transition hover:scale-105"
+              onClick={removePublicKey}
+            >
+              Remove
             </button>
           </div>
         </Fragment>
@@ -146,7 +158,7 @@ const Settings: FC = () => {
             </div>
           )}
           {!formShow && !!myDisplayFee && (
-            <div className="rounded-md border-1.5 p-4 bg-pink-200 m-5">
+            <div className="rounded-md border-1.5 p-4 bg-pink-200 m-5 border-2 border-pink-800">
               <span className="font-bold">My Inbox Fee</span> charged for
               receiving a message:{" "}
               <span className="font-bold text-purple-800">
