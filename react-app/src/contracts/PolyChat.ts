@@ -38,7 +38,7 @@ export interface PolyChatInterface extends utils.Interface {
     "sendMessageTo(string,address)": FunctionFragment;
     "setGlobalMessagingFee(uint256)": FunctionFragment;
     "setMessagingFee(uint256)": FunctionFragment;
-    "setPublicKey(string)": FunctionFragment;
+    "setPublicKey(bytes)": FunctionFragment;
     "setWhiteListFee(address,uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "withdraw(address,uint256)": FunctionFragment;
@@ -91,7 +91,7 @@ export interface PolyChatInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "setPublicKey",
-    values: [PromiseOrValue<string>]
+    values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
     functionFragment: "setWhiteListFee",
@@ -153,7 +153,7 @@ export interface PolyChatInterface extends utils.Interface {
     "Message(address,address,string)": EventFragment;
     "NewGlobalMessagingFee(uint256)": EventFragment;
     "NewMessagingFee(address,uint256)": EventFragment;
-    "NewPublicKey(address,string)": EventFragment;
+    "NewPublicKey(address,bytes)": EventFragment;
     "NewWhitelistMessagingFee(address,address,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
   };
@@ -298,7 +298,7 @@ export interface PolyChat extends BaseContract {
     ): Promise<ContractTransaction>;
 
     setPublicKey(
-      _public_key: PromiseOrValue<string>,
+      _public_key: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -355,7 +355,7 @@ export interface PolyChat extends BaseContract {
   ): Promise<ContractTransaction>;
 
   setPublicKey(
-    _public_key: PromiseOrValue<string>,
+    _public_key: PromiseOrValue<BytesLike>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -410,7 +410,7 @@ export interface PolyChat extends BaseContract {
     ): Promise<void>;
 
     setPublicKey(
-      _public_key: PromiseOrValue<string>,
+      _public_key: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -460,7 +460,7 @@ export interface PolyChat extends BaseContract {
       _messagingFee?: null
     ): NewMessagingFeeEventFilter;
 
-    "NewPublicKey(address,string)"(
+    "NewPublicKey(address,bytes)"(
       _account?: PromiseOrValue<string> | null,
       _publicKey?: null
     ): NewPublicKeyEventFilter;
@@ -526,7 +526,7 @@ export interface PolyChat extends BaseContract {
     ): Promise<BigNumber>;
 
     setPublicKey(
-      _public_key: PromiseOrValue<string>,
+      _public_key: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -586,7 +586,7 @@ export interface PolyChat extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     setPublicKey(
-      _public_key: PromiseOrValue<string>,
+      _public_key: PromiseOrValue<BytesLike>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
