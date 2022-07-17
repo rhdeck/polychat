@@ -1,55 +1,47 @@
-/**
-MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
-MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
-MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
-MMMMNXKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKXNWMMM
-MMW0dlllllllllllllllllllllccclllllllllllllllllllllllllllllllllllllllllllllld0WMM
-MMXdcccccccccccccccccccc;'....,:ccccccccccccccccccccccccccccccccccccccccccccdXMM
-MMKdcccccccccccccccc:,..        .';:ccccccccccccccccccccccccccccccccccccccccoKMM
-MMKdccccccccccccc;'.       .       ..,:cccccccccccccccccccccccccccccccccccccoKMM
-MMKdcccccccccc:,.      ..,:::;'.       .,:ccccccccccccccccccccccccccccccccccdKMM
-MMKdcccccccccc;.    .';ccccccccc;'.     .'ccccccccccccccccccccccccccccccccccdKMM
-MMKdcccccccccc;.   .:ccccccccccccc:.     'ccccccccccccccccccccccccccccccccccdKMM
-MMKdcccccccccc;.   .:cccccccccccccc'   .';ccc:;'....,:ccccccccccccccccccccccdKMM
-MMKdcccccccccc;.   .:cccccccccccccc;'';ccc:,..       ..,;cccccccccccccccccccdKMM
-MMKdcccccccccc;.   .:cccccccccccccccc:;'..               .';:cccccccccccccccdKMM
-MMKdcccccccccc;.   .,:cccccccccccc:,..       ..,:::,..      .':cccccccccccccdKMM
-MMKdcccccccccc:.     ..,:cccccc;'.        .';cccccccc:;'.     ,cccccccccccccdKMM
-MMKdccccccccccc:'.      ..',,..      ..,;:cccccccccccccc:.    'cccccccccccccdKMM
-MMKdcccccccccccccc:,..            .';:cc:cccccccccccccccc.    'cccccccccccccdKMM
-MMKdccccccccccccccccc:;'.     ..,:cc:,...'ccccccccccccccc.    'cccccccccccccdKMM
-MMKdccccccccccccccccccccc;,'';:cccc;.    .ccccccccccccccc.    'cccccccccccccdKMM
-MMKdccccccccccccccccccccccccccccccc,     .;ccccccccccccc,.    'cccccccccccccdKMM
-MMKdccccccccccccccccccccccccccccccc;.      .';:ccccc:;'.     .,cccccccccccccdKMM
-MMKdcccccccccccccccccccccccccccccccc;..       ..','..      ..,ccccccccccccccdKMM
-MMKdcccccccccccccccccccccccccccccccccc:;,'.             .';:ccccccccccccccccoKMM
-MMKdccccccccccccccccccccccccccccccccccccccc:,..     ..';ccccccccccccccccccccdKMM
-MMNklccccccccccccccccccccccccccccccccccccccccc:;''',:cccccccccccccccccccccclkNMM
-MMMN0kkxxxxxxxxxxoccccccccccccccccldxxxxkxxxxkxxxxkxxxxxxxxxxxxxxxxxxxxxkkk0NMMM
-MMMMMMMMMMMMMMWWKdccccccccccccclok0NWWWMMWWWMMMMWMMMWMMMMMMMMMMMMMMMMMMMMMMMMMMM
-MMMMMMMMMMMMMMMNklcccccccccccox0XWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
-MMMMMMMMMMMMMMW0occcccccccldOXWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
-MMMMMMMMMMMMMMXdccccccclokKNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
-MMMMMMMMMMMMMNklcccccox0NWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
-MMMMMMMMMMMMW0occcldOXWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
-MMMMMMMMMMMMXxcldkKNMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
-MMMMMMMMMMMNOdx0NWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
-MMMMMMMMMMMNKXWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
-MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
-MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
-MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
-MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
-                                    PolyChat
+/** 
+  NXKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKXNW   
+W0dlllllllllllllllllllllccclllllllllllllllllllllllllllllllllllllllllllllld0W  
+Xdcccccccccccccccccccc;'....,:ccccccccccccccccccccccccccccccccccccccccccccdX  
+Kdcccccccccccccccc:,..        .';:ccccccccccccccccccccccccccccccccccccccccoK  
+Kdccccccccccccc;'.       .       ..,:cccccccccccccccccccccccccccccccccccccoK  
+Kdcccccccccc:,.      ..,:::;'.       .,:ccccccccccccccccccccccccccccccccccdK  
+Kdcccccccccc;.    .';ccccccccc;'.     .'ccccccccccccccccccccccccccccccccccdK  
+Kdcccccccccc;.   .:ccccccccccccc:.     'ccccccccccccccccccccccccccccccccccdK  
+Kdcccccccccc;.   .:cccccccccccccc'   .';ccc:;'....,:ccccccccccccccccccccccdK  
+Kdcccccccccc;.   .:cccccccccccccc;'';ccc:,..       ..,;cccccccccccccccccccdK  
+Kdcccccccccc;.   .:cccccccccccccccc:;'..               .';:cccccccccccccccdK  
+Kdcccccccccc;.   .,:cccccccccccc:,..       ..,:::,..      .':cccccccccccccdK  
+Kdcccccccccc:.     ..,:cccccc;'.        .';cccccccc:;'.     ,cccccccccccccdK  
+Kdccccccccccc:'.      ..',,..      ..,;:cccccccccccccc:.    'cccccccccccccdK  
+Kdcccccccccccccc:,..            .';:cc:cccccccccccccccc.    'cccccccccccccdK  
+Kdccccccccccccccccc:;'.     ..,:cc:,...'ccccccccccccccc.    'cccccccccccccdK  
+Kdccccccccccccccccccccc;,'';:cccc;.    .ccccccccccccccc.    'cccccccccccccdK  
+Kdccccccccccccccccccccccccccccccc,     .;ccccccccccccc,.    'cccccccccccccdK  
+Kdccccccccccccccccccccccccccccccc;.      .';:ccccc:;'.     .,cccccccccccccdK  
+Kdcccccccccccccccccccccccccccccccc;..       ..','..      ..,ccccccccccccccdK  
+Kdcccccccccccccccccccccccccccccccccc:;,'.             .';:ccccccccccccccccoK  
+Kdccccccccccccccccccccccccccccccccccccccc:,..     ..';ccccccccccccccccccccdK  
+Nklccccccccccccccccccccccccccccccccccccccccc:;''',:cccccccccccccccccccccclkN  
+ N0kkxxxxxxxxxxoccccccccccccccccldxxxxkxxxxkxxxxkxxxxxxxxxxxxxxxxxxxxxkkk0N   
+            WWKdccccccccccccclok0NWWW  WWW    W   W                           
+             Nklcccccccccccox0XW                                              
+            W0occcccccccldOXW                                                 
+            XdccccccclokKN                                                    
+           Nklcccccox0NW                                                      
+          W0occcldOXW                                                         
+          XxcldkKN                                                            
+         NOdx0NW                                                              
+         NKXW                                                                 
+
+                                  PolyChat
  */
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-// Import this file to use console.log
-// import "hardhat/console.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract PolyChat is Ownable {
-    mapping(address => string) private publicKeys;
+    mapping(address => bytes) private publicKeys;
     mapping(address => string[]) private _messages;
     mapping(address => uint256) private _messagingFee;
     mapping(address => mapping(address => uint256))
@@ -62,7 +54,7 @@ contract PolyChat is Ownable {
     }
 
     event Message(address _sender, address indexed _recepient, string _message);
-    event NewPublicKey(address indexed _account, string _publicKey);
+    event NewPublicKey(address indexed _account, bytes _publicKey);
     event NewGlobalMessagingFee(uint256 _messagingFee);
     event NewMessagingFee(address indexed _account, uint256 _messagingFee);
     event NewWhitelistMessagingFee(
@@ -76,12 +68,12 @@ contract PolyChat is Ownable {
         emit NewGlobalMessagingFee(_newMessagingFee);
     }
 
-    function setPublicKey(string memory _public_key) public {
+    function setPublicKey(bytes memory _public_key) public {
         publicKeys[msg.sender] = _public_key;
         emit NewPublicKey(msg.sender, _public_key);
     }
 
-    function publicKeyOf(address _address) public view returns (string memory) {
+    function publicKeyOf(address _address) public view returns (bytes memory) {
         return publicKeys[_address];
     }
 
