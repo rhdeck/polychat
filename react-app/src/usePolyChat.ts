@@ -199,3 +199,34 @@ export const useSetWhitelistFee = () => {
     [polyChat]
   );
 };
+export const useWhiteListSenders = (address: string) => {
+  const polyChat = usePolyChat();
+  const [senders, setSenders] = useState<Record<string, BigNumber>>({});
+  useAsyncEffect(async () => {
+    let key = "";
+    let index = 0;
+    do {
+      key = await polyChat.messagingFeeSenders(address, index);
+      const data = await polyChat.messagingFeeFor(key);
+      const _key = key;
+      setSenders((oldData) => ({ ...oldData, [_key]: data }));
+      index++;
+    } while (key);
+  }, [polyChat, address]);
+  useEffect(() => {
+    const listener: ethers.providers.Listener = (_to, _from, _fee, event) => {
+      if (_to.toLowerCase() == address.toLowerCase()) {
+        setSenders((oldData) => ({ ...oldData, [_from]: _fee }));
+      }
+    };
+    polyChat.on("NewWhitelistMessagingFee", listener);
+    return () => {
+      polyChat.removeListener("NewWhitelistMessagingFee", listener);
+    };
+  }, [polyChat, address]);
+  return senders;
+};
+export const useMyWhitelistSenders = () => {
+  const address = useAccount();
+  return useWhiteListSenders(address);
+};

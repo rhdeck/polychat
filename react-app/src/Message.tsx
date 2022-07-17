@@ -35,7 +35,8 @@ const Message: FC<{
                   toast("Copied to clipboard");
                 }}
               >
-                {from}{" "}
+                {from.substring(0, 6)}...
+                {from.substring(from.length - 4, from.length)}{" "}
                 {from.toLowerCase() === account.toLowerCase() && (
                   <span className="text-gray-500 font-xs">(Me)</span>
                 )}
@@ -49,7 +50,7 @@ const Message: FC<{
                 Reply
               </button>
             </h3>
-            <p className="text-sm text-gray-500">Block: {blockNumber}</p>
+            <p className="text-sm text-gray-500">Block {blockNumber}</p>
           </div>
 
           <MessageBody ipfsPath={ipfsPath} />
@@ -81,7 +82,11 @@ const MessageBody: FC<{ ipfsPath: string }> = ({ ipfsPath }) => {
     }
   }, [ipfsPath, decrypted]);
   if (decrypted) {
-    return <SanitizeHTML html={decrypted.toString()} />;
+    return (
+      <div className="m-2 p-2 border-2 border-pink-800 bg-pink-100 rounded-md prose lg:prose-xl">
+        <SanitizeHTML html={decrypted.toString()} />
+      </div>
+    );
   } else if (blob) {
     return (
       <div>

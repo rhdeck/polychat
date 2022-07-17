@@ -135,7 +135,7 @@ function Main() {
                   </div>
                   <div className="-mr-2 flex items-center sm:hidden">
                     {/* Mobile menu button */}
-                    <Disclosure.Button className="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-200 hover:text-gray-400 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <Disclosure.Button className="bg-pink-800 inline-flex items-center justify-center p-2 rounded-md text-gray-200 hover:text-white hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                       <span className="sr-only">Open main menu</span>
                       {open ? (
                         <XIcon className="block h-6 w-6" aria-hidden="true" />
@@ -158,7 +158,7 @@ function Main() {
                       onClick={() => navigate(item.to)}
                       className={classNames(
                         item.current
-                          ? "bg-indigo-50 border-indigo-500 text-indigo-700"
+                          ? " border-pink-500 text-pink-700"
                           : "border-transparent text-gray-200 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-400",
                         "block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
                       )}
@@ -168,7 +168,7 @@ function Main() {
                     </Disclosure.Button>
                   ))}
                 </div>
-                <div className="pt-4 pb-3 border-t border-gray-200">
+                {/* <div className="pt-4 pb-3 border-t border-gray-200">
                   <div className="mt-3 space-y-1">
                     {userNavigation.map((item) => (
                       <Disclosure.Button
@@ -181,7 +181,7 @@ function Main() {
                       </Disclosure.Button>
                     ))}
                   </div>
-                </div>
+                </div> */}
               </Disclosure.Panel>
             </>
           )}

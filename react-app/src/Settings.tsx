@@ -159,8 +159,8 @@ const Settings: FC = () => {
           )}
           {!formShow && !!myDisplayFee && (
             <div className="rounded-md border-1.5 p-4 bg-pink-200 m-5 border-2 border-pink-800">
-              <span className="font-bold">My Inbox Fee</span> charged for
-              receiving a message:{" "}
+              <span className="font-bold">My Inbox Fee</span> charged to others
+              for sending me a message:{" "}
               <span className="font-bold text-purple-800">
                 {myDisplayFee.toFixed(3)}
                 {" MATIC"}
