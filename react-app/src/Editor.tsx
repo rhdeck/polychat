@@ -16,6 +16,7 @@ import {
   useGetFeeForRecipient,
   useMyPublicKey,
   usePolyChat,
+  usePublicKey,
 } from "./usePolyChat";
 import { upload } from "./ipfs";
 import { BigNumber, ethers, utils } from "ethers";
@@ -66,6 +67,7 @@ const Editor: FC = () => {
   const account = useAccount();
   const balance = useBalance(account);
   const { knownNames, testName } = useENS();
+  const toPublicKey = usePublicKey(knownNames[_to] ? knownNames[_to]! : _to);
   console.log("balance is ", balance, account);
   return (
     <div>
@@ -136,7 +138,7 @@ const Editor: FC = () => {
           return undefined;
         }}
       >
-        {({ values, isSubmitting, isValid }) => (
+        {({ values, isSubmitting, isValid, validateField, setFieldValue }) => (
           <Form>
             <div className="m-4">
               <div className="text-sm text-gray-600 font-medium">
@@ -145,6 +147,7 @@ const Editor: FC = () => {
               <Field
                 name="to"
                 className="p-2 border-2 border-pink-800 rounded-md w-80 text-xs"
+                on
               />
               {knownNames[values.to] && (
                 <div className="text-xs text-purple-800 font-medium">
@@ -176,15 +179,21 @@ const Editor: FC = () => {
                 disabled={
                   isSubmitting ||
                   !isValid ||
-                  balance.lt(messagingFee.add(utils.parseEther("0.001")))
+                  balance.lt(messagingFee.add(utils.parseEther("0.001"))) ||
+                  !toPublicKey
                 }
                 className={
-                  isSubmitting || !isValid
+                  isSubmitting ||
+                  !isValid ||
+                  balance.lt(messagingFee.add(utils.parseEther("0.001"))) ||
+                  !toPublicKey
                     ? "p-2 bg-gray-600 text-white  border-gray-800 border-1 rounded-md transition 5"
                     : "p-2 bg-blue-600 text-white hover:text-gray-200 border-gray-800 border-1 rounded-md transition hover:scale-105"
                 }
               >
-                {balance.lt(messagingFee.add(utils.parseEther("0.001")))
+                {!toPublicKey
+                  ? `Destination address is not registered with Polynodes`
+                  : balance.lt(messagingFee.add(utils.parseEther("0.001")))
                   ? `Too little token in account: need at least ${utils.formatEther(
                       messagingFee.add(utils.parseEther("0.001"))
                     )} ${symbol}`

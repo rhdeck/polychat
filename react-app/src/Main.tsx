@@ -124,7 +124,7 @@ function Main() {
                       ))}
                     </div>
                   </div>
-                  <div className="hidden sm:ml-6 sm:flex sm:items-center">
+                  {/* <div className="hidden sm:ml-6 sm:flex sm:items-center">
                     <button
                       type="button"
                       className="bg-white p-1 rounded-full text-gray-200 hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -132,7 +132,7 @@ function Main() {
                       <span className="sr-only">View notifications</span>
                       <BellIcon className="h-6 w-6" aria-hidden="true" />
                     </button>
-                  </div>
+                  </div> */}
                   <div className="-mr-2 flex items-center sm:hidden">
                     {/* Mobile menu button */}
                     <Disclosure.Button className="bg-pink-800 inline-flex items-center justify-center p-2 rounded-md text-gray-200 hover:text-white hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">

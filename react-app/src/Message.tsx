@@ -91,7 +91,7 @@ const MessageBody: FC<{ ipfsPath: string }> = ({ ipfsPath }) => {
     return (
       <div>
         <button
-          className="p-2 border-1.5 border-gray-800 rounded-md bg-pink-200 text-purple-800 hover:text-gray-500 transition"
+          className="p-2  border-purple-800 rounded-md bg-pink-200 text-purple-900 font-medium border-2 hover:text-gray-800 hover:bg-pink-400 transition"
           onClick={() => {
             decrypt(blob, account).then(setDecrypted);
           }}
