@@ -1,39 +1,29 @@
 /** 
-  NXKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKXNW   
-W0dlllllllllllllllllllllccclllllllllllllllllllllllllllllllllllllllllllllld0W  
-Xdcccccccccccccccccccc;'....,:ccccccccccccccccccccccccccccccccccccccccccccdX  
-Kdcccccccccccccccc:,..        .';:ccccccccccccccccccccccccccccccccccccccccoK  
-Kdccccccccccccc;'.       .       ..,:cccccccccccccccccccccccccccccccccccccoK  
-Kdcccccccccc:,.      ..,:::;'.       .,:ccccccccccccccccccccccccccccccccccdK  
-Kdcccccccccc;.    .';ccccccccc;'.     .'ccccccccccccccccccccccccccccccccccdK  
-Kdcccccccccc;.   .:ccccccccccccc:.     'ccccccccccccccccccccccccccccccccccdK  
-Kdcccccccccc;.   .:cccccccccccccc'   .';ccc:;'....,:ccccccccccccccccccccccdK  
-Kdcccccccccc;.   .:cccccccccccccc;'';ccc:,..       ..,;cccccccccccccccccccdK  
-Kdcccccccccc;.   .:cccccccccccccccc:;'..               .';:cccccccccccccccdK  
-Kdcccccccccc;.   .,:cccccccccccc:,..       ..,:::,..      .':cccccccccccccdK  
-Kdcccccccccc:.     ..,:cccccc;'.        .';cccccccc:;'.     ,cccccccccccccdK  
-Kdccccccccccc:'.      ..',,..      ..,;:cccccccccccccc:.    'cccccccccccccdK  
-Kdcccccccccccccc:,..            .';:cc:cccccccccccccccc.    'cccccccccccccdK  
-Kdccccccccccccccccc:;'.     ..,:cc:,...'ccccccccccccccc.    'cccccccccccccdK  
-Kdccccccccccccccccccccc;,'';:cccc;.    .ccccccccccccccc.    'cccccccccccccdK  
-Kdccccccccccccccccccccccccccccccc,     .;ccccccccccccc,.    'cccccccccccccdK  
-Kdccccccccccccccccccccccccccccccc;.      .';:ccccc:;'.     .,cccccccccccccdK  
-Kdcccccccccccccccccccccccccccccccc;..       ..','..      ..,ccccccccccccccdK  
-Kdcccccccccccccccccccccccccccccccccc:;,'.             .';:ccccccccccccccccoK  
-Kdccccccccccccccccccccccccccccccccccccccc:,..     ..';ccccccccccccccccccccdK  
-Nklccccccccccccccccccccccccccccccccccccccccc:;''',:cccccccccccccccccccccclkN  
- N0kkxxxxxxxxxxoccccccccccccccccldxxxxkxxxxkxxxxkxxxxxxxxxxxxxxxxxxxxxkkk0N   
-            WWKdccccccccccccclok0NWWW  WWW    W   W                           
-             Nklcccccccccccox0XW                                              
-            W0occcccccccldOXW                                                 
-            XdccccccclokKN                                                    
-           Nklcccccox0NW                                                      
-          W0occcldOXW                                                         
-          XxcldkKN                                                            
-         NOdx0NW                                                              
-         NKXW                                                                 
+   WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW   
+ N0xxxxxxxxxxxxxddxxxxxxxxxxxxxxxxxxxxxxxxxxxxx0N 
+W0occcccccccc:,....';cccccccccccccccccccccccccco0 
+W0lccccccc;'..  ..   .';:ccccccccccccccccccccccl0 
+W0lccccc:'   .';::;'.   .,:ccccccccccccccccccccl0 
+W0lccccc:.  'cccccccc,. ..;ccc:;:ccccccccccccccl0W
+W0lccccc:. .;cccccccc:'.,;;;'.  ..,:cccccccccccl0W
+W0lccccc:.  ,cccccccc:;'...  ....   .';ccccccccl0W
+W0lccccc:.  ..,:cc:;'.   ..';:cc:;'.  .;cccccccl0W
+W0lcccccc:,..  ....  ..';:ccccccccc;.  ,cccccccl0W
+W0lccccccccc:;'.  ..,:;'.';cccccccc;.  ,cccccccl0W
+W0lccccccccccccc::ccc:.  .':ccccccc,   ,cccccccl0W
+W0lcccccccccccccccccc:'    .',::;'.   .;cccccccl0W
+ 0lcccccccccccccccccccc;'..    .   .';:ccccccccl0 
+ Kocccccccccccccccccccccccc:,....';cccccccccccco0 
+ WKOkkkkkkdlccccccccldkkkkkkkkkkkkkkkkkkkkkkkkOKW 
+         XxlccccclokKNW                           
+        WOlccccox0XW                              
+       WKdccldOXW                                 
+       NxlokKN                                    
+      WKk0NW                                      
+       WW                                         
+                    PolyChat
 
-                                  PolyChat
+         Try it out on https://polychat.xyz
  */
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
@@ -50,7 +40,7 @@ contract PolyChat is Ownable {
     uint256 private _globalMessagingFee;
 
     constructor() {
-        _globalMessagingFee = 10**15; //1 finney
+        _globalMessagingFee = 10**17; //0.1 ETH
         emit NewGlobalMessagingFee(_globalMessagingFee);
     }
 
@@ -115,7 +105,7 @@ contract PolyChat is Ownable {
         );
         require(
             bytes(publicKeys[msg.sender]).length > 0,
-            "Sender public key not added"
+            "You must register a public key to send a message"
         );
         if (_messagingFeeWhiteList[_address][msg.sender] > 0) {
             require(
@@ -138,15 +128,6 @@ contract PolyChat is Ownable {
         _address.transfer(msg.value - _globalMessagingFee);
         emit Message(msg.sender, _address, _message);
     }
-
-    // function removeMessage(uint _index) public {
-    //     delete _messages[msg.sender][_index];
-    //     messageCount[msg.sender]--;
-    // }
-
-    // function messages() public view returns (string[] memory) {
-    //     return _messages[msg.sender];
-    // }
 
     function withdraw(address payable _address, uint256 _amount)
         public

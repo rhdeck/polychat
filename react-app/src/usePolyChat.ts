@@ -6,8 +6,8 @@ import useAsyncEffect from "./useAsyncEffect";
 
 export const addresses: Record<string, string> = {
   // "1337": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-  "80001": "0x9B939e1252aA484246CaA8AB8380b9f926C1c76D",
-  "137": "0x7caCE48de94C3513B0E583568664656b7d4A5fDF",
+  "80001": "0x48e10f8a98152b46e552961aCf5B7A1B67504D29",
+  "137": "0xFD17de2f833d59646a3263cbdA2Ea5bba4CD60E4",
 };
 export const ethereum = (window as unknown as { ethereum: any }).ethereum;
 export const provider = ethereum
