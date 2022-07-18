@@ -53,7 +53,7 @@ const Settings: FC = () => {
     <Fragment>
       {publicKey && publicKey !== "0x" && (
         <Fragment>
-          <div className="rounded-md bg-pink-200 p-4 border-1.5 border-pink-500 m-5 border-2 border-pink-800">
+          <div className="rounded-md bg-pink-200 p-4 border-1.5 m-5 border-2 border-pink-800">
             <span className="font-bold">Public Key</span> is all set:{" "}
             <span
               className="text-gray-500 hover:text-gray-700 cursor-pointer"
